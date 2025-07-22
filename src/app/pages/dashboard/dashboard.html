@@ -1,0 +1,81 @@
+<mat-drawer-container class="example-container full-size-container" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="side" [(opened)]="isDrawerOpen" (openedChange)="isDrawerOpen = $event">
+    <div class="drawer-menu full-height">
+      <div class="drawer-header">
+          
+      </div>
+
+      <div class="drawer-content">
+        <button 
+          routerLink="/dashboard" 
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"  mat-button class="drawer-item">
+          <mat-icon>home</mat-icon>
+          <span *ngIf="isDrawerOpen">Dashboard</span>
+        </button>
+        <button 
+          routerLink="/employee" 
+          routerLinkActive="active"
+           mat-button class="drawer-item">
+          <mat-icon>person</mat-icon>
+          <span *ngIf="isDrawerOpen">Employee</span>
+        </button>
+        <button mat-button class="drawer-item">
+          <mat-icon>settings</mat-icon>
+          <span *ngIf="isDrawerOpen">Task</span>
+        </button>
+         <button mat-button class="drawer-item">
+          <mat-icon>settings</mat-icon>
+          <span *ngIf="isDrawerOpen">Project</span>
+        </button>
+         <button mat-button class="drawer-item">
+          <mat-icon>settings</mat-icon>
+          <span *ngIf="isDrawerOpen">Client</span>
+        </button>
+      </div>
+
+      <div class="drawer-footer">
+        <button mat-button class="drawer-item">
+          <mat-icon>logout</mat-icon>
+          <span *ngIf="isDrawerOpen">Logout</span>
+        </button>
+      </div>
+    </div>
+  </mat-drawer>
+
+  <div class="example-sidenav-content full-height">
+    <header class="main-header">
+      <button mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <h2>Application Header</h2>
+           
+        <span class="spacer"></span>
+        <button mat-icon-button [matMenuTriggerFor]="drawerMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        
+        <mat-menu #drawerMenu="matMenu">
+            <button mat-menu-item>
+                <mat-icon>person</mat-icon>
+                <span>Profile</span>
+            </button>
+            <button mat-menu-item>
+                <mat-icon>settings</mat-icon>
+                <span>Settings</span>
+            </button>
+            <button mat-menu-item>
+                <mat-icon>logout</mat-icon>
+                <span>Logout</span>
+            </button>
+        </mat-menu>
+    </header>
+
+    
+    <main class="main-content">
+      <app-content></app-content>
+    </main>
+
+    <app-footer></app-footer>
+  </div>
+</mat-drawer-container>

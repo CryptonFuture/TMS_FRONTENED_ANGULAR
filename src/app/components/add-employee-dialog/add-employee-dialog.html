@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>Add Post</h2>
+<mat-dialog-content class="mat-typography">
+  <form class="example-form">
+    <div class="form-grid">
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input class="input" matInput placeholder="name..." value="">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input type="email" class="input" matInput placeholder="email..." value="">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Phone</mat-label>
+    <input class="input" matInput placeholder="email..." value="">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Address</mat-label>
+    <input type="password" class="input" matInput placeholder="email..." value="">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
+    <input type="password" class="input" matInput placeholder="password..." value="">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>ConfirmPass</mat-label>
+    <input class="input" matInput placeholder="confirmPass..." value="">
+  </mat-form-field>
+
+ 
+</div>
+<!-- <mat-form-field appearance="outline">
+<mat-label>joining date</mat-label>
+  <input matInput [matDatepicker]="datepicker" [(ngModel)]="value">
+  <mat-datepicker #datepicker/>
+  <mat-datepicker-toggle [for]="datepicker" matSuffix/>
+</mat-form-field> -->
+
+ <mat-form-field class="example-full-width" appearance="outline">
+    <mat-label>Description</mat-label>
+    <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
+  </mat-form-field>
+</form>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton mat-dialog-close>Cancel</button>
+  <button matButton="filled" [mat-dialog-close]="true" cdkFocusInitial>submit</button>
+</mat-dialog-actions>
