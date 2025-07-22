@@ -22,6 +22,17 @@ mat-form-field {
   max-width: 500px !important;
 }
 
+.dialog-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-button {
+  margin: -12px -12px -12px auto;
+}
+
+
 @media (max-width: 600px) {
   .form-grid {
     grid-template-columns: 1fr;
