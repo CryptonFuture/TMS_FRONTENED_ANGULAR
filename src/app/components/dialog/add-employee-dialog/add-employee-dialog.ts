@@ -7,10 +7,11 @@ import { FormsModule } from '@angular/forms';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-add-employee-dialog',
-  imports: [MatDatepickerModule, MatTimepickerModule, MatDialogModule, MatInputModule, MatFormFieldModule, FormsModule, MatButtonModule],
+  imports: [MatIconModule, MatDatepickerModule, MatTimepickerModule, MatDialogModule, MatInputModule, MatFormFieldModule, FormsModule, MatButtonModule],
   templateUrl: './add-employee-dialog.html',
   styleUrl: './add-employee-dialog.scss',
   providers: [provideNativeDateAdapter()]
