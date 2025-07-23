@@ -7,9 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { AddEmployeeDialog } from '../add-employee-dialog/add-employee-dialog';
+import { AddEmployeeDialog } from '../dialog/add-employee-dialog/add-employee-dialog';
 import { MatMenuModule } from '@angular/material/menu';
-import { EditEmployeeDialog } from '../edit-employee-dialog/edit-employee-dialog';
+import { EditEmployeeDialog } from '../dialog/edit-employee-dialog/edit-employee-dialog';
 
 export interface PeriodicElement {
   name: string;
@@ -51,8 +51,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class Tabs implements AfterViewInit {
 
   readonly dialog = inject(MatDialog);
-
-
 
   displayedColumns: string[] = ['position', 'name', 'email', 'phone', 'address', 'action'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
