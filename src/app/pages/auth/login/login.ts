@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -11,20 +11,64 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common'
 import { Router, RouterModule } from '@angular/router'
+import { User } from '../../../services/auth/user';
+import { createLoginForm } from '../../../components/auth-forms/sign-in.form';
+import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterModule, CommonModule, MatTooltipModule, MatMenuModule, MatSidenavModule, MatIconModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatCardModule, MatButtonModule, MatGridListModule],
+  imports: [MatProgressSpinnerModule, RouterModule, FormsModule, ReactiveFormsModule, CommonModule, MatTooltipModule, MatMenuModule, MatSidenavModule, MatIconModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatCardModule, MatButtonModule, MatGridListModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Login {
   isDrawerOpen = true;
+  signInForm: FormGroup
 
-  constructor(private _router: Router) {}
+  constructor(private _snackBar: MatSnackBar, private fb: FormBuilder, private _router: Router, private _userServices: User) {
+    this.signInForm = createLoginForm(this.fb)
+  }
+
+   get f() {
+    return this.signInForm.controls;
+  }
 
   submit(): void {
-    this._router.navigate(['dashboard'])
+      if (this.signInForm.invalid) {
+        return;
+      }
+      this.signInForm.disable()
+      this._userServices.login(this.signInForm.value).subscribe({
+        next: (response) => {
+          this.signInForm.enable()
+          if(response.success) {
+            this._snackBar.open(response.message, 'x', {
+              duration: 1500,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            })
+          
+            setTimeout(() => {
+              this._router.navigateByUrl('dashboard')
+            }, 1500)
+          } else {
+             this._snackBar.open(response.error?.error || 'Login failed. Please try again.', 'x', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
+          }
+        },
+        error: (err) => {
+          this.signInForm.enable()
+          console.log(err);
+          
+        }
+      })
+    
+ 
   }
 }
