@@ -2,6 +2,10 @@ import { Routes } from '@angular/router';
 import { Login } from './pages/auth/login/login';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Employee } from './pages/employee/employee';
+import { AddEmployeeForm } from './components/forms/add-employee-form/add-employee-form';
+import { AddEmployeePage } from './pages/add-employee-page/add-employee-page';
+import { EditEmployeeForm } from './components/forms/edit-employee-form/edit-employee-form';
+import { EditEmployeePage } from './pages/edit-employee-page/edit-employee-page';
 
 export const routes: Routes = [
     {
@@ -33,6 +37,8 @@ export const routes: Routes = [
         ]
     },
 
+    // EMPLOYEE ROUTES
+
     {
         path: '',
         component: Employee,
@@ -41,7 +47,37 @@ export const routes: Routes = [
                 path: 'employee',
                 loadChildren: () =>
                     import('./pages/employee/employee.routes').then((m) => m.employeeRoutes)
-            }
+            },
+
+            
+        ]
+    },
+
+    {
+        path: '',
+        component: AddEmployeePage,
+        children: [
+            {
+                path: 'add-employee',
+                loadChildren: () =>
+                    import('./pages/employee/employee.routes').then((m) => m.employeeRoutes)
+            },
+
+            
+        ]
+    },
+
+    {
+        path: '',
+        component: EditEmployeePage,
+        children: [
+            {
+                path: 'edit-employee',
+                loadChildren: () =>
+                    import('./pages/employee/employee.routes').then((m) => m.employeeRoutes)
+            },
+
+            
         ]
     }
 ];
