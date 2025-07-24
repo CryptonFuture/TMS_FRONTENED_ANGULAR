@@ -1,85 +1,137 @@
-  <form class="example-form" [formGroup]="employeeForm">
-    <div class="card-flex">
-  <mat-card appearance="outlined" class="example-card">
-  <mat-card-header>
-    <mat-card-title> Add Employee</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="form-grid">
-  <mat-form-field>
-    <mat-label>Name</mat-label>
-    <input formControlName="name" class="input" matInput placeholder="name..." value="">
-  </mat-form-field>
+<form class="example-form" [formGroup]="employeeForm">
+  <div class="card-flex">
+    <mat-card appearance="outlined" class="example-card">
+      <mat-card-header>
+        <mat-card-title> Add Employee</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-grid">
+          <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input formControlName="name" class="input" matInput placeholder="name..." value="">
+            <mat-error *ngIf="employeeForm.get('name')?.hasError('required')">
+              Name is required
+            </mat-error>
+          </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Email</mat-label>
-    <input formControlName="email" type="email" class="input" matInput placeholder="email..." value="">
-  </mat-form-field>
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input formControlName="email" type="email" class="input" matInput placeholder="email..." value="">
+            <mat-error *ngIf="employeeForm.get('email')?.hasError('required')">
+              Email is required
+            </mat-error>
 
-  <mat-form-field>
-    <mat-label>Phone</mat-label>
-    <input formControlName="phone" class="input" matInput placeholder="phone..." value="">
-  </mat-form-field>
+            <mat-error
+              *ngIf="employeeForm.get('email')?.hasError('email')  && !employeeForm.get('email')?.hasError('required')">
+              Please enter a valid email address
+            </mat-error>
+          </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Address</mat-label>
-    <input formControlName="address" type="password" class="input" matInput placeholder="address..." value="">
-  </mat-form-field>
+          <mat-form-field>
+            <mat-label>Phone</mat-label>
+            <input formControlName="phone" class="input" matInput placeholder="phone..." value="">
+            <mat-error *ngIf="employeeForm.get('phone')?.hasError('required')">
+              Phone is required
+            </mat-error>
 
-  <mat-form-field>
-    <mat-label>Password</mat-label>
-    <input formControlName="password" type="password" class="input" matInput placeholder="password..." value="">
-  </mat-form-field>
+            <mat-error *ngIf="employeeForm.get('phone')?.hasError('pattern')">
+              Enter valid phone number (e.g. +923001234567)
+            </mat-error>
+          </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>ConfirmPass</mat-label>
-    <input formControlName="confirmPass" class="input" matInput placeholder="confirmPass..." value="">
-  </mat-form-field>
+          <mat-form-field>
+            <mat-label>Address</mat-label>
+            <input formControlName="address" class="input" matInput placeholder="address..." value="">
+            <mat-error *ngIf="employeeForm.get('address')?.hasError('required')">
+              Address is required
+            </mat-error>
+          </mat-form-field>
 
-  <mat-form-field>
-  <mat-label>designation</mat-label>
-  <mat-select  formControlName="designation">
-    <mat-option *ngFor="let design of des" value="design.name">{{design.name}}</mat-option>
-     <mat-option *ngIf="des.length === 0" disabled>
-    No record found
-  </mat-option>
-  </mat-select>
- 
-</mat-form-field>
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input formControlName="password" type="password" class="input" matInput placeholder="password..." value="">
+            <mat-error *ngIf="employeeForm.get('password')?.hasError('required')">
+              Password is required
+            </mat-error>
+            <mat-error
+              *ngIf="employeeForm.get('password')?.hasError('minlength') && !employeeForm.get('password')?.hasError('required')">
+              Password must be at least 10 characters
+            </mat-error>
 
-  <mat-form-field>
-  <mat-label>department</mat-label>
-  <mat-select formControlName="department">
-    <mat-option *ngFor="let depart of dep" value="depart.name">{{depart.name}}</mat-option>
-      <mat-option *ngIf="dep.length === 0" disabled>
-    No record found
-  </mat-option>
-  </mat-select>
+            <mat-error *ngIf="employeeForm.hasError('passwordMismatch') && employeeForm.get('confirmPass')?.touched">
+              Passwords do not match
+            </mat-error>
+          </mat-form-field>
 
-</mat-form-field>
+          <mat-form-field>
+            <mat-label>ConfirmPass</mat-label>
+            <input type="password" formControlName="confirmPass" class="input" matInput placeholder="confirmPass..." value="">
+            <mat-error *ngIf="employeeForm.get('confirmPass')?.hasError('required')">
+              ConfirmPass is required
+            </mat-error>
+             <mat-error
+              *ngIf="employeeForm.get('confirmPass')?.hasError('minlength') && !employeeForm.get('confirmPass')?.hasError('required')">
+              Password must be at least 10 characters
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>designation</mat-label>
+            <mat-select formControlName="designation">
+              <mat-option *ngFor="let design of des" [value]="design.name">{{design.name}}</mat-option>
+              <mat-option *ngIf="des.length === 0" disabled>
+                No record found
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="employeeForm.get('designation')?.hasError('required')">
+              Designation is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>department</mat-label>
+            <mat-select formControlName="department">
+              <mat-option *ngFor="let depart of dep" [value]="depart.name">{{depart.name}}</mat-option>
+              <mat-option *ngIf="dep.length === 0" disabled>
+                No record found
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="employeeForm.get('department')?.hasError('required')">
+              Department is required
+            </mat-error>
+          </mat-form-field>
 
 
-  <mat-form-field>
-<mat-label>joining date</mat-label>
-  <input matInput [matDatepicker]="datepicker" formControlName="joiningDate">
-  <mat-datepicker #datepicker/>
-  <mat-datepicker-toggle [for]="datepicker" matSuffix/>
-</mat-form-field>
- 
-</div>
+          <mat-form-field>
+            <mat-label>joining date</mat-label>
+            <input matInput [matDatepicker]="datepicker" formControlName="joiningDate">
+            <mat-datepicker #datepicker />
+            <mat-datepicker-toggle [for]="datepicker" matSuffix />
+            <mat-error *ngIf="employeeForm.get('joiningDate')?.hasError('required')">
+              JoiningDate is required
+            </mat-error>
+          </mat-form-field>
+
+        </div>
 
 
- <mat-form-field class="example-full-width">
-    <mat-label>Description</mat-label>
-    <textarea formControlName="description"  matInput placeholder="Ex. It makes me feel..."></textarea>
-  </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Description</mat-label>
+          <textarea formControlName="description" matInput placeholder="Ex. It makes me feel..."></textarea>
+        </mat-form-field>
 
 
-  </mat-card-content>
-  <mat-card-actions>
-        <button matButton="filled" [mat-dialog-close]="true" cdkFocusInitial>submit</button>
-  </mat-card-actions>
-</mat-card>
-</div>
-  </form>
- 
+      </mat-card-content>
+      <mat-card-actions>
+        <button [disabled]="employeeForm.disabled" (click)="onSubmit()" matButton="filled">
+          @if(!employeeForm.disabled) {
+          <span>Add</span>
+          }
+          @if (employeeForm.disabled) {
+          <span>Add</span>
+          }
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</form>
