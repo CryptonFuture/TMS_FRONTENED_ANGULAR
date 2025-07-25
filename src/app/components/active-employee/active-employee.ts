@@ -13,6 +13,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { Router, ActivatedRoute, RouterModule, RouterLink, RouterLinkActive } from '@angular/router'
 import { Employee } from '../../services/employee/employee';
 import { Subject, takeUntil } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface PeriodicElement {
   name: string;
@@ -24,7 +25,7 @@ export interface PeriodicElement {
 
 @Component({
   selector: 'app-active-employee',
-  imports: [MatMenuModule, RouterModule, MatDialogModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
+  imports: [ MatMenuModule, RouterModule, MatDialogModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
   templateUrl: './active-employee.html',
   styleUrl: './active-employee.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,10 +41,11 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private cdr: ChangeDetectorRef, private _empServices: Employee, private _router: Router, private _activeRoute: ActivatedRoute) {}
+  constructor(private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee, private _router: Router, private _activeRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
      this.getActiveEmp()
+    
   }
 
   ngAfterViewInit() {
@@ -66,8 +68,38 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
     this._router.navigate(['add-employee'])
   }
 
-    onNavigateEditEmployeeForm(): void {
-    this._router.navigate(['edit-employee'])
-  }
+    onNavigateEditEmployeeForm(id: string): void {       
+      this._router.navigate(['edit-employee', id])
+    }
+
+    onDelete(id: string): void {
+      this._empServices.deleteEmp(id).subscribe({
+        next: (response) => {
+          if(response.success) {
+             this._snackBar.open(response.message, 'x', {
+              duration: 1500,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            })
+
+          } else {
+             this._snackBar.open(response.error || 'Login failed. Please try again.', 'x', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
+          }
+        },
+        error: (err) => {
+           const errorMessage = err?.error?.error || 'Something went wrong on server.';
+            this._snackBar.open(errorMessage, 'x', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
+          
+        }
+      })
+    }
 
 }

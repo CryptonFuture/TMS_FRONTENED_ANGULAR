@@ -46,8 +46,12 @@
      <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef> action </th>
       <td mat-cell *matCellDef="let element">
-          <button class="btn " matButton="filled">active</button>
-           <button class="btn btn-marg" matButton="elevated">admin</button>
+          <button (click)="toggleStatus(element._id, !element.active)" class="btn " matButton="filled">
+            {{element.active ? 'Active' : 'InActive'}}
+          </button>
+           <button (click)="toggleAdmin(element)" class="btn btn-marg" matButton="elevated">
+            {{element.is_admin ? 'IsAdmin' : 'IsNotAdmin'}}
+          </button>
         </td>
     </ng-container>
 

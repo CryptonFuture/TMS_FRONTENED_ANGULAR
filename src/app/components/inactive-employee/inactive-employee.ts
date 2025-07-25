@@ -9,6 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatChipsModule } from '@angular/material/chips';
 import { Employee } from '../../services/employee/employee';
 import { Subject, takeUntil } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface PeriodicElement {
   name: string;
@@ -33,7 +34,7 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private cdr: ChangeDetectorRef, private _empServices: Employee) {}
+  constructor(private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee) {}
 
   ngOnInit(): void {
      this.getInActiveEmp()
@@ -53,6 +54,69 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
     ngOnDestroy(): void {
       this.destroy$.next()
       this.destroy$.complete()
+    }
+
+    toggleStatus(id: string, active: boolean): void {
+      this._empServices.toggleStatus(id, active).subscribe({
+        next: (response) => {
+           if(response.success) {
+             this._snackBar.open(response.message, 'x', {
+              duration: 1500,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            })
+
+          } else {
+             this._snackBar.open(response.error || 'Login failed. Please try again.', 'x', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
+          }
+          this.getInActiveEmp()
+        },
+        error: (err) => {
+            const errorMessage = err?.error?.error || 'Something went wrong on server.';
+            this._snackBar.open(errorMessage, 'x', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
+        }
+      })
+    }
+
+    toggleAdmin(employee: any): void {
+      const updateStatus = !employee.is_admin
+      this._empServices.toggleAdmin(employee._id, updateStatus).subscribe({
+        next: (response) => {
+          employee.is_admin = updateStatus;
+          this.cdr.detectChanges()
+
+           if(response.success) {
+             this._snackBar.open(response.message, 'x', {
+              duration: 1500,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            })
+
+          } else {
+             this._snackBar.open(response.error || 'Login failed. Please try again.', 'x', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
+          }
+        },
+        error: (err) => {
+            const errorMessage = err?.error?.error || 'Something went wrong on server.';
+            this._snackBar.open(errorMessage, 'x', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
+        }
+      })
     }
   
 }

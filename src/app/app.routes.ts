@@ -6,6 +6,7 @@ import { AddEmployeeForm } from './components/forms/add-employee-form/add-employ
 import { AddEmployeePage } from './pages/add-employee-page/add-employee-page';
 import { EditEmployeeForm } from './components/forms/edit-employee-form/edit-employee-form';
 import { EditEmployeePage } from './pages/edit-employee-page/edit-employee-page';
+import { employeeGuard } from './guard/employee/employee-guard';
 
 export const routes: Routes = [
     {
@@ -72,7 +73,7 @@ export const routes: Routes = [
         component: EditEmployeePage,
         children: [
             {
-                path: 'edit-employee',
+                path: 'edit-employee/:id',
                 loadChildren: () =>
                     import('./pages/employee/employee.routes').then((m) => m.employeeRoutes)
             },

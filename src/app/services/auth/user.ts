@@ -9,6 +9,16 @@ import { environment } from '../../environments/environments';
 export class User {
     constructor(private _httpclient: HttpClient) {}
 
+    isLoggedInNot(): any {
+      const token = localStorage.getItem('accessToken')
+      !token
+    }
+
+     isLoggedIn(): any {
+      const token = localStorage.getItem('accessToken')
+      token
+    }
+
     set accessToken(accessToken: string) {
       localStorage.setItem('accessToken', accessToken)
     }

@@ -9,9 +9,11 @@ import { environment } from '../../environments/environments';
 export class Employee {
     private _getActiveEmployee = new BehaviorSubject<any[]>([])
     private _getInActiveEmployee = new BehaviorSubject<any[]>([])
+    private _getEmyById = new BehaviorSubject<any[]>([])
 
     activeEmp: Observable<any[]> = this._getActiveEmployee.asObservable()
     InactiveEmp: Observable<any[]> = this._getInActiveEmployee.asObservable()
+    emyById: Observable<any[]> = this._getEmyById.asObservable()
 
     constructor(private _httpclient: HttpClient) {}
 
@@ -52,6 +54,40 @@ export class Employee {
         )
     }
 
+    editEmpById(id: any): Observable<any> {
+     return this._httpclient.get(`${environment.baseUrl}/api/v1/editEmpById/${id}`).pipe(
+      tap(response => {
+        const EmpById = (response as any).data ?? []
+        this._getEmyById.next(EmpById)
+
+      }),
+      catchError((error) => {
+         console.error('Error fetching edit emp id Employee', error);
+            return throwError(
+              () => new Error('Error fetching edit emp id Employee')
+            );
+      })
+     ) 
+    }
+
+    toggleStatus(id: string, active: boolean): Observable<any> {
+      return this._httpclient.put(`${environment.baseUrl}/api/v1/toggleStatus`, {
+        id,
+        active
+      })
+    }
+
+
+    toggleAdmin(id: string, is_admin: boolean): Observable<any> {
+      return this._httpclient.put(`${environment.baseUrl}/api/v1/toggleAdmin`, {
+        id,
+        is_admin
+      })
+    }
+
+    deleteEmp(id: string): Observable<any> {
+      return this._httpclient.delete(`${environment.baseUrl}/api/v1/deleteEmp/${id}`)
+    }
 
 
 }
