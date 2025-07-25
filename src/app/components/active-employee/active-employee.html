@@ -58,11 +58,11 @@
             <mat-icon>plus</mat-icon>
             <span>View</span>
         </button>
-        <button mat-menu-item (click)="onNavigateEditEmployeeForm()">
+        <button mat-menu-item (click)="onNavigateEditEmployeeForm(element._id)">
             <mat-icon>edit</mat-icon>
             <span >Edit</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="onDelete(element._id)">
             <mat-icon>delete</mat-icon>
             <span>Delete</span>
         </button>

@@ -4,6 +4,6 @@ import { Dashboard } from './dashboard';
 export const dashboardRoutes: Routes = [
     {
         path: 'dashboard',
-        component: Dashboard
+        component: Dashboard,
     }
 ];

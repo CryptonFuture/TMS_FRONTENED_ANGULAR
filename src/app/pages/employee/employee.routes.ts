@@ -20,7 +20,7 @@ export const employeeRoutes: Routes = [
     },
 
     {
-        path: 'edit-employee',
+        path: 'edit-employee/:id',
         component: EditEmployeePage
     }
 
