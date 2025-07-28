@@ -10,10 +10,12 @@ export class Employee {
     private _getActiveEmployee = new BehaviorSubject<any[]>([])
     private _getInActiveEmployee = new BehaviorSubject<any[]>([])
     private _getEmyById = new BehaviorSubject<any[]>([])
+    private _viewEmpById = new BehaviorSubject<any>({})
 
     activeEmp: Observable<any[]> = this._getActiveEmployee.asObservable()
     InactiveEmp: Observable<any[]> = this._getInActiveEmployee.asObservable()
     emyById: Observable<any[]> = this._getEmyById.asObservable()
+    viewEmyById: Observable<any> = this._viewEmpById.asObservable()
 
     constructor(private _httpclient: HttpClient) {}
 
@@ -70,11 +72,32 @@ export class Employee {
      ) 
     }
 
+    viewEmpById(id: any): Observable<any> {
+     return this._httpclient.get(`${environment.baseUrl}/api/v1/viewEmpById/${id}`).pipe(
+      tap(response => {
+        const ViewEmpById = (response as any).data ?? {}
+        this._viewEmpById.next(ViewEmpById)
+
+      }),
+      catchError((error) => {
+         console.error('Error fetching edit emp id Employee', error);
+            return throwError(
+              () => new Error('Error fetching edit emp id Employee')
+            );
+      })
+     ) 
+    }
+
     toggleStatus(id: string, active: boolean): Observable<any> {
       return this._httpclient.put(`${environment.baseUrl}/api/v1/toggleStatus`, {
         id,
         active
       })
+    }
+
+    toggleDeleted(id: string): Observable<any> {
+      return this._httpclient.put(`${environment.baseUrl}/api/v1/toggleDeleted/${id}`, null)
+      
     }
 
 
