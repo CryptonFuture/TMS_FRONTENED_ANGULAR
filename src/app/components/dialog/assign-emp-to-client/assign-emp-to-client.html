@@ -1,0 +1,42 @@
+<form class="example-form" [formGroup]="assignEmpToClientForm">
+  <h2 mat-dialog-title class="dialog-title">
+    Assign Employee To Client
+    <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+  <mat-dialog-content class="mat-typography">
+    <mat-form-field>
+      <mat-label>Employee Name</mat-label>
+      <mat-select formControlName="emp_id">
+        <mat-option *ngFor="let emp of assignEmp" [value]="emp._id">{{emp.name}}</mat-option>
+        <mat-option *ngIf="assignEmp.length === 0" disabled>
+          No record found
+        </mat-option>
+      </mat-select>
+       <mat-error *ngIf="assignEmpToClientForm.get('emp_id')?.hasError('required')">
+          Employee Id is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Client Name</mat-label>
+      <mat-select formControlName="client_id">
+        <mat-option></mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button matButton mat-dialog-close>Close</button>
+    <button [disabled]="assignEmpToClientForm.disabled" (click)="onSubmit()" matButton="filled" cdkFocusInitial>
+      @if(!assignEmpToClientForm.disabled) {
+          <span>Add</span>
+        }
+      @if (assignEmpToClientForm.disabled) {
+          <span>Add</span>
+        }
+      
+    </button>
+  </mat-dialog-actions>
+</form>

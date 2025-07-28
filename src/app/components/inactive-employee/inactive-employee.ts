@@ -10,6 +10,11 @@ import { MatChipsModule } from '@angular/material/chips';
 import { Employee } from '../../services/employee/employee';
 import { Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmDialog } from '../confirm-dialog/confirm-dialog/confirm-dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common'
+import { Router, ActivatedRoute, RouterModule, RouterLink, RouterLinkActive } from '@angular/router'
+import { ViewEmployeeDialog } from '../dialog/view/view-employee-dialog/view-employee-dialog';
 
 export interface PeriodicElement {
   name: string;
@@ -21,20 +26,22 @@ export interface PeriodicElement {
 
 @Component({
   selector: 'app-inactive-employee',
-  imports: [MatMenuModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
+  imports: [MatDialogModule, MatMenuModule, CommonModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
   templateUrl: './inactive-employee.html',
   styleUrl: './inactive-employee.scss'
 })
 export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
 
-  displayedColumns: string[] = ['serialNo', 'name', 'email', 'phone', 'address', 'status', 'action'];
-  dataSource = new MatTableDataSource([]);
+  displayedColumns: string[] = ['serialNo', 'name', 'email', 'phone', 'status', 'active', 'admin', 'deleted', 'action'];
+  dataSource: any = new MatTableDataSource([]);
+
+  apiCallInProgress: { [id: string]: boolean } = {};
 
   private destroy$ = new Subject<void>();
-  
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee) {}
+  constructor(private _router: Router,private _matdialog: MatDialog, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee) {}
 
   ngOnInit(): void {
      this.getInActiveEmp()
@@ -116,6 +123,107 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
               verticalPosition: 'bottom'
             });
         }
+      })
+    }
+
+      toggleDeleted(id: string): void {
+        const element = this.dataSource.find((item: any) => item._id === id);
+         element.is_deleted = !element.is_deleted;
+          element.is_deleted = true;
+        if (element) {
+            this._empServices.toggleDeleted(id).subscribe({
+              next: (response) => {
+              
+                if(response.success) {
+                  this._snackBar.open(response.message, 'x', {
+                    duration: 1500,
+                    horizontalPosition: 'center',
+                    verticalPosition: 'bottom'
+                  })
+
+                } else {
+                  element.is_deleted = false;
+                  this._snackBar.open(response.error || 'Login failed. Please try again.', 'x', {
+                    duration: 2000,
+                    horizontalPosition: 'center',
+                    verticalPosition: 'bottom'
+                  });
+                }
+              },
+              error: (err) => {
+                element.is_deleted = false;
+                  const errorMessage = err?.error?.error || 'Something went wrong on server.';
+                  this._snackBar.open(errorMessage, 'x', {
+                    duration: 2000,
+                    horizontalPosition: 'center',
+                    verticalPosition: 'bottom'
+                  });
+              }
+            })
+          }
+        }
+
+        onNavigateEditEmployeeForm(id: string): void {       
+          this._router.navigate(['edit-employee', id])
+        }
+
+    onDelete(id: string): void {
+      const dialogRef = this._matdialog.open(ConfirmDialog, {
+        width: '300px',
+        data: {message: 'Are you sure you want to delete this employee?'}
+      });
+
+      dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+        if(confirmed) {
+           this._empServices.deleteEmp(id).subscribe({
+        next: (response) => {
+          if(response.success) {
+             this._snackBar.open(response.message, 'x', {
+              duration: 1500,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            })
+
+          } else {
+             this._snackBar.open(response.error || 'Login failed. Please try again.', 'x', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
+          }
+          this.getInActiveEmp()
+
+        },
+        error: (err) => {
+           const errorMessage = err?.error?.error || 'Something went wrong on server.';
+            this._snackBar.open(errorMessage, 'x', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
+          
+        }
+      })
+        }
+      })
+     
+    }
+
+    onViewEmployeeDialog(id: string, name: string, email: string, phone: string, address: string): void {
+      const dialogRef = this._matdialog.open(ViewEmployeeDialog, {
+        width: '1000px',
+        data: {
+          id: id,
+          name: name,
+          email: email,
+          phone: phone,
+          address: address
+        }
+      }) 
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log(result);
+        
       })
     }
   

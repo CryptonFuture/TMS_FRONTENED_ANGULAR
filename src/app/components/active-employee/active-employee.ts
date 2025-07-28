@@ -12,8 +12,12 @@ import { EditEmployeeDialog } from '../dialog/edit-employee-dialog/edit-employee
 import { MatChipsModule } from '@angular/material/chips';
 import { Router, ActivatedRoute, RouterModule, RouterLink, RouterLinkActive } from '@angular/router'
 import { Employee } from '../../services/employee/employee';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmDialog } from '../confirm-dialog/confirm-dialog/confirm-dialog';
+import { ViewEmployeeDialog } from '../dialog/view/view-employee-dialog/view-employee-dialog';
+import { FormControl, UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AssignEmpToClient } from '../dialog/assign-emp-to-client/assign-emp-to-client';
 
 export interface PeriodicElement {
   name: string;
@@ -25,7 +29,7 @@ export interface PeriodicElement {
 
 @Component({
   selector: 'app-active-employee',
-  imports: [ MatMenuModule, RouterModule, MatDialogModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
+  imports: [ MatMenuModule, FormsModule, ReactiveFormsModule, RouterModule, MatDialogModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
   templateUrl: './active-employee.html',
   styleUrl: './active-employee.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,12 +42,12 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
 
   private destroy$ = new Subject<void>();
 
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee, private _router: Router, private _activeRoute: ActivatedRoute) {}
+  constructor(private _matdialog: MatDialog, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee, private _router: Router, private _activeRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
+  
      this.getActiveEmp()
     
   }
@@ -73,7 +77,14 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
     }
 
     onDelete(id: string): void {
-      this._empServices.deleteEmp(id).subscribe({
+      const dialogRef = this._matdialog.open(ConfirmDialog, {
+        width: '300px',
+        data: {message: 'Are you sure you want to delete this employee?'}
+      });
+
+      dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+        if(confirmed) {
+           this._empServices.deleteEmp(id).subscribe({
         next: (response) => {
           if(response.success) {
              this._snackBar.open(response.message, 'x', {
@@ -89,6 +100,8 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
               verticalPosition: 'bottom'
             });
           }
+          this.getActiveEmp()
+
         },
         error: (err) => {
            const errorMessage = err?.error?.error || 'Something went wrong on server.';
@@ -99,6 +112,38 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
             });
           
         }
+      })
+        }
+      })
+     
+    }
+
+    onViewEmployeeDialog(id: string, name: string,email: string, phone: string, address: string): void {
+      const dialogRef = this._matdialog.open(ViewEmployeeDialog, {
+        width: '1000px',
+        data: {
+          name: name,
+          id: id,
+          email: email,
+          phone: phone,
+          address: address
+        }
+      }) 
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log(result);
+        
+      })
+    }
+
+    onAssignEmpToClient(): void {
+      const dialogRef = this._matdialog.open(AssignEmpToClient, {
+        width: '400px'
+      })
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log(result);
+        
       })
     }
 

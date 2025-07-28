@@ -11,7 +11,18 @@ table {
    height: 100%;
 }
 
+.columns {
+  background-color: white;
+}
 
+.paginators {
+  background-color: white;
+}
+
+.example-small-box {
+  height: 400px;
+  overflow: auto;
+}
 
 .d-flexs {
   display: flex;
@@ -21,4 +32,11 @@ table {
 
 .mar-btn {
   margin-top: 10px;
+  background: #3f51b5;
+  margin-left: 10px;
+}
+
+.custom-header {
+  color: white;
+  background: #3f51b5;
 }

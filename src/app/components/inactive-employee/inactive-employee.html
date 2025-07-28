@@ -31,11 +31,6 @@
       <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
     </ng-container>
 
-     <ng-container matColumnDef="address">
-      <th mat-header-cell *matHeaderCellDef> address </th>
-      <td mat-cell *matCellDef="let element"> {{element.address}} </td>
-    </ng-container>
-
      <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef> status </th>
       <td mat-cell *matCellDef="let element"> 
@@ -43,23 +38,72 @@
         </td>
     </ng-container>
 
-     <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef> action </th>
+     <ng-container matColumnDef="active">
+      <th mat-header-cell *matHeaderCellDef> Active </th>
       <td mat-cell *matCellDef="let element">
-          <button (click)="toggleStatus(element._id, !element.active)" class="btn " matButton="filled">
+          <button (click)="toggleStatus(element._id, !element.active)" class="btn" matButton="filled">
             {{element.active ? 'Active' : 'InActive'}}
           </button>
-           <button (click)="toggleAdmin(element)" class="btn btn-marg" matButton="elevated">
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="admin">
+      <th mat-header-cell *matHeaderCellDef> Admin </th>
+        <td mat-cell *matCellDef="let element">
+          <button (click)="toggleAdmin(element)" class="btn" matButton="elevated">
             {{element.is_admin ? 'IsAdmin' : 'IsNotAdmin'}}
           </button>
         </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <ng-container matColumnDef="deleted">
+      <th mat-header-cell *matHeaderCellDef> Deleted </th>
+      <td mat-cell *matCellDef="let element">
+        <button  [ngStyle]="{
+        'background-color': element.is_deleted ? '#d3d3d3' : '',
+        'color': element.is_deleted ? '#000000' : ''
+      }" [disabled]="element.is_deleted" (click)="toggleDeleted(element._id)" class="btn" matButton="elevated">
+            {{element.is_deleted ? 'IsDeleted' : 'IsNotDeleted'}}
+          </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef> action </th>
+      <td mat-cell *matCellDef="let element">
+        <button matIconButton [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onViewEmployeeDialog(
+          element._id, 
+          element.name,
+          element.email,
+          element.phone,
+          element.address
+          )">
+          <mat-icon>plus</mat-icon>
+          <span>View</span>
+        </button>
+        <button mat-menu-item (click)="onNavigateEditEmployeeForm(element._id)">
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        <button mat-menu-item (click)="onDelete(element._id)">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+
+      </td>
+      
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="custom-header"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="columns"></tr>
   </table>
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+  <mat-paginator class="paginators" [pageSizeOptions]="[5, 10, 20]"
                  showFirstLastButtons
                  aria-label="Select page of periodic elements">
   </mat-paginator>
