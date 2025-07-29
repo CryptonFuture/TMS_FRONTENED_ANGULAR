@@ -1,3 +1,4 @@
+ <form class="example-form" [formGroup]="editEmployeeForm">
 <h2 mat-dialog-title class="dialog-title">
   Edit Post
   <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
@@ -5,46 +6,93 @@
   </button>
 </h2>
 <mat-dialog-content class="mat-typography">
-  <form class="example-form">
-<div class="form-grid">
-  <mat-form-field appearance="outline">
-    <mat-label>Name</mat-label>
-    <input class="input" matInput placeholder="name..." value="">
-  </mat-form-field>
+ 
+    <div class="form-grid">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input readonly formControlName="name" class="input" matInput placeholder="name..." value="">
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Email</mat-label>
-    <input type="email" class="input" matInput placeholder="email..." value="">
-  </mat-form-field>
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input readonly formControlName="email" type="email" class="input" matInput placeholder="email..." value="">
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Phone</mat-label>
-    <input class="input" matInput placeholder="email..." value="">
-  </mat-form-field>
+      <mat-form-field>
+        <mat-label>Phone</mat-label>
+        <input formControlName="phone" class="input" matInput placeholder="email..." value="">
+        <mat-error *ngIf="editEmployeeForm.get('phone')?.hasError('required')">
+          Phone is required
+        </mat-error>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Address</mat-label>
-    <input type="password" class="input" matInput placeholder="email..." value="">
-  </mat-form-field>
-</div>
-<!-- <mat-form-field appearance="outline">
-<mat-label>joining date</mat-label>
-  <input matInput [matDatepicker]="datepicker" [(ngModel)]="value">
-  <mat-datepicker #datepicker/>
-  <mat-datepicker-toggle [for]="datepicker" matSuffix/>
-</mat-form-field> -->
+        <mat-error *ngIf="editEmployeeForm.get('phone')?.hasError('pattern')">
+          Enter valid phone number (e.g. +923001234567)
+        </mat-error>
+      </mat-form-field>
 
- <mat-form-field class="example-full-width" appearance="outline">
-    <mat-label>Description</mat-label>
-    <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
-  </mat-form-field>
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input formControlName="address" class="input" matInput placeholder="email..." value="">
+         <mat-error *ngIf="editEmployeeForm.get('address')?.hasError('required')">
+          Address is required
+        </mat-error>
+      </mat-form-field>
 
-  <mat-checkbox>Status</mat-checkbox>
-  <mat-checkbox>Admin</mat-checkbox>
-</form>
+      <mat-form-field>
+        <mat-label>designation</mat-label>
+        <mat-select formControlName="designation">
+          <mat-option *ngFor="let design of des" [value]="design.name">{{design.name}}</mat-option>
+          <mat-option *ngIf="des.length === 0" disabled>
+            No record found
+          </mat-option>
+        </mat-select>
+ <mat-error *ngIf="editEmployeeForm.get('designation')?.hasError('required')">
+          Designation is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>department</mat-label>
+        <mat-select formControlName="department">
+          <mat-option *ngFor="let depart of dep" [value]="depart.name">{{depart.name}}</mat-option>
+          <mat-option *ngIf="dep.length === 0" disabled>
+            No record found
+          </mat-option>
+        </mat-select>
+ <mat-error *ngIf="editEmployeeForm.get('department')?.hasError('required')">
+          Department is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+
+    <mat-form-field>
+      <mat-label>joining date</mat-label>
+      <input readonly matInput [matDatepicker]="datepicker" formControlName="joiningDate">
+      <mat-datepicker #datepicker />
+      <mat-datepicker-toggle [for]="datepicker" matSuffix />
+      
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Description</mat-label>
+      <textarea formControlName="description" matInput placeholder="Ex. It makes me feel..."></textarea>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="active">Status</mat-checkbox>
+    <mat-checkbox formControlName="is_admin">Admin</mat-checkbox>
+
 
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button matButton mat-dialog-close>Cancel</button>
-  <button matButton="filled" [mat-dialog-close]="true" cdkFocusInitial>update</button>
+  <button [disabled]="editEmployeeForm.disabled" (click)="onUpdate()" matButton="filled" cdkFocusInitial>
+      @if(!editEmployeeForm.disabled) {
+      <span>Update</span>
+      }
+      @if (editEmployeeForm.disabled) {
+      <span>Update</span>
+      }
+  </button>
 </mat-dialog-actions>
+</form>

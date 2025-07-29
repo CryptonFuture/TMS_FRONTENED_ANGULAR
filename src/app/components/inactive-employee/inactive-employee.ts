@@ -15,6 +15,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common'
 import { Router, ActivatedRoute, RouterModule, RouterLink, RouterLinkActive } from '@angular/router'
 import { ViewEmployeeDialog } from '../dialog/view/view-employee-dialog/view-employee-dialog';
+import { EditEmployeeDialog } from '../dialog/edit-employee-dialog/edit-employee-dialog';
 
 export interface PeriodicElement {
   name: string;
@@ -226,5 +227,17 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
         
       })
     }
+
+     onEditEmployeDialog(data: any): void {
+          const dialogRef = this._matdialog.open(EditEmployeeDialog, {
+            width: '5000px',
+            data: { data }
+          })
+    
+          dialogRef.afterClosed().subscribe((result) => {
+            console.log(result);
+            
+          })
+        }
   
 }
