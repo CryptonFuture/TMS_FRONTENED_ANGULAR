@@ -147,4 +147,27 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
       })
     }
 
+    onEditEmployeDialog(data: any): void {
+      const dialogRef = this._matdialog.open(EditEmployeeDialog, {
+        width: '5000px',
+        data: { data }
+      })
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log(result);
+        
+      })
+    }
+
+    onAddEmployeeDialog(): void {
+       const dialogRef = this._matdialog.open(AddEmployeeDialog, {
+        width: '5000px'
+      })
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log(result);
+        
+      })
+    }
+
 }

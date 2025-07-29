@@ -112,5 +112,20 @@ export class Employee {
       return this._httpclient.delete(`${environment.baseUrl}/api/v1/deleteEmp/${id}`)
     }
 
+    updateUser(id: any, response: any): Observable<any> {
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+      return this._httpclient.put<any>(`${environment.baseUrl}/api/v1/updateUser/${id}`, response, {headers}).pipe(
+        tap(response => {
+          console.log(response);
+        }),
+        catchError(error => {
+          return of(error)
+        })
+
+      )
+    }
+
 
 }
