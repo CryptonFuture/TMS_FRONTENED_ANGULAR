@@ -1,0 +1,52 @@
+
+table {
+  
+  width: 100%;
+}
+
+.input {
+  margin-top: 10px;
+   width: 100%;
+   max-width: 300px;
+   height: 100%;
+}
+
+.columns {
+  background-color: white;
+}
+
+.paginators {
+  background-color: white;
+}
+
+.example-small-box {
+  height: 400px;
+  overflow: auto;
+}
+
+.d-flexs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn {
+  background: #3f51b5;
+  color: white;
+}
+
+.mar-btn {
+  margin-top: 10px;
+  background: #3f51b5;
+  margin-left: 10px;
+}
+
+.custom-header {
+  color: white;
+  background: #3f51b5;
+}

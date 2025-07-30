@@ -1,0 +1,45 @@
+<form class="example-form" [formGroup]="editTaskForm">
+  <h2 mat-dialog-title class="dialog-title">
+    Edit Task
+    <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+  <mat-dialog-content class="mat-typography">
+    <div class="form-grid">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input formControlName="name" class="input" matInput placeholder="name..." value="">
+         <mat-error *ngIf="editTaskForm.get('name')?.hasError('required')">
+          Name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Client Id</mat-label>
+        <mat-select formControlName="client_id">
+          <mat-option>a</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+    <mat-form-field class="example-full-width">
+      <mat-label>Description</mat-label>
+      <textarea formControlName="description" class="input" matInput placeholder="description..." value=""></textarea>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="status">Status</mat-checkbox>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button matButton mat-dialog-close>Cancel</button>
+    <button [disabled]="editTaskForm.disabled" (click)="onSubmit()" matButton="filled" cdkFocusInitial>
+      @if(!editTaskForm.disabled) {
+      <span>Update</span>
+      }
+      @if (editTaskForm.disabled) {
+      <span>Update</span>
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,108 @@
+import { Injectable } from '@angular/core';
+import { switchMap, tap, pipe, catchError, throwError, BehaviorSubject, Observable, of } from 'rxjs'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { environment } from '../../environments/environments';
+import { AddTask, UpdateTask } from '../../Interface/task/task'
+
+@Injectable({
+  providedIn: 'root'
+})
+export class Task {
+    private _getTask = new BehaviorSubject<any[]>([])
+    private _viewTaskById = new BehaviorSubject<any[]>([])
+    private _ediTaskById = new BehaviorSubject<any[]>([])
+
+    task: Observable<any[]> = this._getTask.asObservable()
+    viewTask: Observable<any[]> = this._viewTaskById.asObservable()
+    editTask: Observable<any[]> = this._ediTaskById.asObservable()
+
+  constructor(private _httpclient: HttpClient) {}
+
+  getTask(): Observable<any> {
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/getTask`).pipe(
+        switchMap(response => {
+          const Task = (response as any).data ?? []
+          return of(Task)
+        }),
+        tap(task => {
+          this._getTask.next(task)
+        }),
+        catchError((error) => {
+          console.error('Error fetching Task', error);
+          return throwError(
+            () => new Error('Error fetching Task')
+          );
+        })
+      )
+    }
+
+    addTask(response: any): Observable<any> {
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+      return this._httpclient.post<any>(`${environment.baseUrl}/api/v1/addTask`, response, {headers}).pipe(
+        tap(response => {
+          console.log(response);
+        }),
+        catchError(error => {
+          return of(error)
+        })
+
+      )
+    }
+
+    deleteTask(id: string): Observable<any> {
+      return this._httpclient.delete(`${environment.baseUrl}/api/v1/deleteTask/${id}`)
+    }
+
+    toggleDeleted(id: string): Observable<any> {
+      return this._httpclient.put(`${environment.baseUrl}/api/v1/deleteTasks/${id}`, null) 
+    }
+
+  viewTaskById(id: any): Observable<any> {
+    return this._httpclient.get(`${environment.baseUrl}/api/v1/viewTaskById/${id}`).pipe(
+      tap(response => {
+        const ViewTaskById = (response as any).data ?? {}
+        this._viewTaskById.next(ViewTaskById)
+
+      }),
+      catchError((error) => {
+        console.error('Error fetching view task id', error);
+        return throwError(
+          () => new Error('Error fetching view task id')
+        );
+      })
+    )
+  }
+
+  editTaskById(id: any): Observable<any> {
+    return this._httpclient.get(`${environment.baseUrl}/api/v1/editTaskById/${id}`).pipe(
+      tap(response => {
+        const EdiTaskById = (response as any).data ?? []
+        this._ediTaskById.next(EdiTaskById)
+
+      }),
+      catchError((error) => {
+        console.error('Error fetching edit task id', error);
+        return throwError(
+          () => new Error('Error fetching edit task id')
+        );
+      })
+    )
+  }
+
+   updateTask(id: any, response: any): Observable<any> {
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+      return this._httpclient.put<any>(`${environment.baseUrl}/api/v1/updateTask/${id}`, response, {headers}).pipe(
+        tap(response => {
+          console.log(response);
+        }),
+        catchError(error => {
+          return of(error)
+        })
+
+      )
+    }
+}
