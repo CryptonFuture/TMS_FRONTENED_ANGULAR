@@ -39,7 +39,7 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
 
   displayedColumns: string[] = ['serialNo', 'name', 'email', 'phone', 'address', 'status', 'action'];
   dataSource = new MatTableDataSource([]);
-
+  activeCount: any
   private destroy$ = new Subject<void>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -61,6 +61,11 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
       this.dataSource = response
       this.cdr.detectChanges()
     })
+
+    this._empServices.employeeActiveCount().pipe(takeUntil(this.destroy$)).subscribe(response => {
+      this.activeCount = response.count
+       this.cdr.detectChanges()
+    }) 
   }
 
   ngOnDestroy(): void {
