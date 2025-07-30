@@ -101,6 +101,12 @@
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="custom-header"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="columns"></tr>
+     <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" [attr.colspan]="displayedColumns.length" style="
+                    text-align: center; padding: 8px;">
+                   <h1>No Record found</h1> 
+                </td>
+            </tr> 
   </table>
 
   <mat-paginator class="paginators" [pageSizeOptions]="[5, 10, 20]"
