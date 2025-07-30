@@ -11,11 +11,17 @@ export class Employee {
     private _getInActiveEmployee = new BehaviorSubject<any[]>([])
     private _getEmyById = new BehaviorSubject<any[]>([])
     private _viewEmpById = new BehaviorSubject<any>({})
+    private _countAll = new BehaviorSubject<any>({})
+    private _countActiveEmp = new BehaviorSubject<any>({})
+    private _countInActiveEmp = new BehaviorSubject<any>({})
 
     activeEmp: Observable<any[]> = this._getActiveEmployee.asObservable()
     InactiveEmp: Observable<any[]> = this._getInActiveEmployee.asObservable()
     emyById: Observable<any[]> = this._getEmyById.asObservable()
     viewEmyById: Observable<any> = this._viewEmpById.asObservable()
+    countEmpAll: Observable<any> = this._countAll.asObservable()
+    countActiveEmp: Observable<any> = this._countActiveEmp.asObservable()
+    countInActiveEmp: Observable<any> = this._countInActiveEmp.asObservable()
 
     constructor(private _httpclient: HttpClient) {}
 
@@ -125,6 +131,19 @@ export class Employee {
         })
 
       )
+    }
+
+    employeeAllCount(): Observable<any> {
+       return this._httpclient.get(`${environment.baseUrl}/api/v1/employeeAllCount`)
+    }
+
+    
+    employeeActiveCount(): Observable<any> {
+       return this._httpclient.get(`${environment.baseUrl}/api/v1/employeeActiveCount`)
+    }
+
+     employeeInActiveCount(): Observable<any> {
+       return this._httpclient.get(`${environment.baseUrl}/api/v1/employeeInActiveCount`)
     }
 
 
