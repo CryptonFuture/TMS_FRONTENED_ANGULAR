@@ -7,6 +7,7 @@ import { AddEmployeePage } from './pages/add-employee-page/add-employee-page';
 import { EditEmployeeForm } from './components/forms/edit-employee-form/edit-employee-form';
 import { EditEmployeePage } from './pages/edit-employee-page/edit-employee-page';
 import { employeeGuard } from './guard/employee/employee-guard';
+import { Task } from './pages/task/task';
 
 export const routes: Routes = [
     {
@@ -80,5 +81,21 @@ export const routes: Routes = [
 
             
         ]
-    }
+    },
+
+    // TASK
+
+    {
+        path: '',
+        component: Task,
+        children: [
+            {
+                path: 'task',
+                loadChildren: () =>
+                    import('./pages/task/task.routes').then((m) => m.taskRoutes)
+            },
+
+            
+        ]
+    },
 ];

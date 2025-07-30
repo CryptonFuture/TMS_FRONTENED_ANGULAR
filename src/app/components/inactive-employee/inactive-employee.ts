@@ -224,7 +224,7 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
 
       dialogRef.afterClosed().subscribe((result) => {
         console.log(result);
-        
+        this.getInActiveEmp()
       })
     }
 
@@ -235,8 +235,7 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
           })
     
           dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
-            
+            this.getInActiveEmp()
           })
         }
   

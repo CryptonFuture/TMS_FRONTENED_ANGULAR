@@ -154,8 +154,7 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
       })
 
       dialogRef.afterClosed().subscribe((result) => {
-        console.log(result);
-        
+        this.getActiveEmp()
       })
     }
 
@@ -165,8 +164,7 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
       })
 
       dialogRef.afterClosed().subscribe((result) => {
-        console.log(result);
-        
+        this.getActiveEmp()
       })
     }
 
