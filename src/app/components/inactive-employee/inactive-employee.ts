@@ -35,7 +35,7 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
 
   displayedColumns: string[] = ['serialNo', 'name', 'email', 'phone', 'status', 'active', 'admin', 'deleted', 'action'];
   dataSource: any = new MatTableDataSource([]);
-
+  InActiveCount: any
   apiCallInProgress: { [id: string]: boolean } = {};
 
   private destroy$ = new Subject<void>();
@@ -57,6 +57,11 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
         this.dataSource = response
         this.cdr.detectChanges()
       })
+
+      this._empServices.employeeInActiveCount().pipe(takeUntil(this.destroy$)).subscribe(response => {
+      this.InActiveCount = response.count
+       this.cdr.detectChanges()
+    }) 
     }
   
     ngOnDestroy(): void {
