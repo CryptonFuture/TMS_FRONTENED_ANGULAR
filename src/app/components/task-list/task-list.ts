@@ -12,7 +12,7 @@ import { EditEmployeeDialog } from '../dialog/edit-employee-dialog/edit-employee
 import { MatChipsModule } from '@angular/material/chips';
 import { Router, ActivatedRoute, RouterModule, RouterLink, RouterLinkActive } from '@angular/router'
 import { Employee } from '../../services/employee/employee';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, forkJoin, of, retry, Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog/confirm-dialog';
 import { ViewEmployeeDialog } from '../dialog/view/view-employee-dialog/view-employee-dialog';
@@ -40,7 +40,7 @@ export interface Tasks {
 export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
 
   displayedColumns: string[] = ['serialNo', 'name', 'description', 'client_id', 'status', 'is_deleted', 'action'];
-  dataSource: any = new MatTableDataSource([]);
+  task: any = new MatTableDataSource([]);
   taskCount: any
 
   private destroy$ = new Subject<void>();
@@ -50,20 +50,23 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
   constructor(private _taskServies: Task, private _matdialog: MatDialog, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee, private _router: Router, private _activeRoute: ActivatedRoute) {}
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+    this.task.paginator = this.paginator;
   }
 
   ngOnInit(): void {
     this.getTask()
-    this._taskServies.countTask().subscribe(response => {
-      this.taskCount = response.count
-      this.cdr.detectChanges()
-    })
   }
 
   getTask(): void {
-    this._taskServies.getTask().pipe(takeUntil(this.destroy$)).subscribe(response => {
-      this.dataSource = response
+    forkJoin([
+      this._taskServies.getTask().pipe(retry(3), catchError(err => of(null))),
+      this._taskServies.countTask().pipe(retry(3), catchError(err => of(null)))
+    ]).pipe(takeUntil(this.destroy$)).subscribe(([
+      task,
+      taskcount
+    ]) => {
+      this.task = task,
+      this.taskCount = taskcount.count
       this.cdr.detectChanges()
     })
   }
@@ -154,7 +157,7 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
   }
 
      toggleDeleted(id: string): void {
-        const element = this.dataSource.find((item: any) => item._id === id);
+        const element = this.task.find((item: any) => item._id === id);
          element.is_deleted = !element.is_deleted;
           element.is_deleted = true;
         if (element) {
