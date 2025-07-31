@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { switchMap, tap, pipe, catchError, throwError, BehaviorSubject, Observable, of } from 'rxjs'
-import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { environment } from '../../environments/environments';
 
 @Injectable({
@@ -26,8 +26,19 @@ export class Employee {
     constructor(private _httpclient: HttpClient) {}
 
 
-    getActiveEmp(): Observable<any> {
-      return this._httpclient.get(`${environment.baseUrl}/api/v1/getActiveEmp`).pipe(
+    getActiveEmp(search: string = "", page: number = 1, limit: number = 10, sort: string = 'name:asc'): Observable<any> {
+      let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+       params = params
+        .set('page', page.toString())
+        .set('limit', limit.toString())
+        .set('sort', sort)
+
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/getActiveEmp`, {params}).pipe(
         switchMap(response => {
           const ActiveEmp = (response as any).data ?? []
           return of(ActiveEmp)
@@ -44,8 +55,18 @@ export class Employee {
       )
     }
 
-      getInActiveEmp(): Observable<any> {
-        return this._httpclient.get(`${environment.baseUrl}/api/v1/getInActiveEmp`).pipe(
+      getInActiveEmp(search: string = "", page: number = 1, limit: number = 10): Observable<any> {
+         let params = new HttpParams()
+
+        if(search) {
+          params = params.set('search', search)
+        }
+
+        params = params
+        .set('page', page.toString())
+        .set('limit', limit.toString());
+
+        return this._httpclient.get(`${environment.baseUrl}/api/v1/getInActiveEmp`, {params}).pipe(
           switchMap(response => {
             const InActiveEmp = (response as any).data ?? []
             return of(InActiveEmp)
@@ -138,12 +159,22 @@ export class Employee {
     }
 
     
-    employeeActiveCount(): Observable<any> {
-       return this._httpclient.get(`${environment.baseUrl}/api/v1/employeeActiveCount`)
+    employeeActiveCount(search: string = ""): Observable<any> {
+      let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+       return this._httpclient.get(`${environment.baseUrl}/api/v1/employeeActiveCount`, {params})
     }
 
-     employeeInActiveCount(): Observable<any> {
-       return this._httpclient.get(`${environment.baseUrl}/api/v1/employeeInActiveCount`)
+     employeeInActiveCount(search: string = ""): Observable<any> {
+      let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+       return this._httpclient.get(`${environment.baseUrl}/api/v1/employeeInActiveCount`, {params})
     }
 
 

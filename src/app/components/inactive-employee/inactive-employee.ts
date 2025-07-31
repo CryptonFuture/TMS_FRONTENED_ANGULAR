@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, inject, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatChipsModule } from '@angular/material/chips';
 import { Employee } from '../../services/employee/employee';
-import { Subject, takeUntil } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, forkJoin, map, of, retry, Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog/confirm-dialog';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common'
 import { Router, ActivatedRoute, RouterModule, RouterLink, RouterLinkActive } from '@angular/router'
 import { ViewEmployeeDialog } from '../dialog/view/view-employee-dialog/view-employee-dialog';
 import { EditEmployeeDialog } from '../dialog/edit-employee-dialog/edit-employee-dialog';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 export interface PeriodicElement {
   name: string;
@@ -27,15 +28,19 @@ export interface PeriodicElement {
 
 @Component({
   selector: 'app-inactive-employee',
-  imports: [MatDialogModule, MatMenuModule, CommonModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
+  imports: [FormsModule, ReactiveFormsModule, MatDialogModule, MatMenuModule, CommonModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
   templateUrl: './inactive-employee.html',
   styleUrl: './inactive-employee.scss'
 })
 export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
 
   displayedColumns: string[] = ['serialNo', 'name', 'email', 'phone', 'status', 'active', 'admin', 'deleted', 'action'];
-  dataSource: any = new MatTableDataSource([]);
+  InActiveEmp: any = new MatTableDataSource([]);
   InActiveCount: any
+  searchInputControl: UntypedFormControl = new UntypedFormControl()
+  searchQuery: any = ""
+  page: number = 1;
+  limit: number = 10;
   apiCallInProgress: { [id: string]: boolean } = {};
 
   private destroy$ = new Subject<void>();
@@ -45,24 +50,49 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
   constructor(private _router: Router,private _matdialog: MatDialog, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee) {}
 
   ngOnInit(): void {
-     this.getInActiveEmp()
+     this.getInActiveCountEmp()
+     this.onSearch()
+  }
+
+  onSearch(): void {
+       this.searchInputControl.valueChanges
+       .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        map(value => value?.trim().toLowerCase())
+       ).subscribe(value => {
+        this.searchQuery = value
+        this.getInActiveCountEmp()
+        this.cdr.detectChanges()
+       })
+    }
+
+   onPageChange(event: PageEvent): void {
+      this.page = event.pageIndex + 1;
+      this.limit = event.pageSize;
+      this.getInActiveCountEmp();
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    this.InActiveEmp.paginator = this.paginator;
   }
 
-  getInActiveEmp(): void {
-     this._empServices.getInActiveEmp().pipe(takeUntil(this.destroy$)).subscribe(response => {
-        this.dataSource = response
-        this.cdr.detectChanges()
-      })
 
-      this._empServices.employeeInActiveCount().pipe(takeUntil(this.destroy$)).subscribe(response => {
-      this.InActiveCount = response.count
-       this.cdr.detectChanges()
-    }) 
-    }
+  getInActiveCountEmp(): void {
+    forkJoin([
+       this._empServices.getInActiveEmp(this.searchQuery, this.page, this.limit).pipe(retry(3), catchError(err => of(null))),
+       this._empServices.employeeInActiveCount(this.searchQuery).pipe(retry(3), catchError(err => of(null)))
+    ]).pipe(takeUntil(this.destroy$)).subscribe(([
+      inactiveEmp,
+      inactiveCount
+    ]) => {
+      this.InActiveEmp = inactiveEmp,
+      this.InActiveCount = inactiveCount.count
+      this.cdr.detectChanges()
+    })
+  }
+
+   
   
     ngOnDestroy(): void {
       this.destroy$.next()
@@ -86,7 +116,7 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
               verticalPosition: 'bottom'
             });
           }
-          this.getInActiveEmp()
+          this.getInActiveCountEmp()
         },
         error: (err) => {
             const errorMessage = err?.error?.error || 'Something went wrong on server.';
@@ -133,7 +163,7 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
     }
 
       toggleDeleted(id: string): void {
-        const element = this.dataSource.find((item: any) => item._id === id);
+        const element = this.InActiveEmp.find((item: any) => item._id === id);
          element.is_deleted = !element.is_deleted;
           element.is_deleted = true;
         if (element) {
@@ -197,7 +227,7 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
               verticalPosition: 'bottom'
             });
           }
-          this.getInActiveEmp()
+          this.getInActiveCountEmp()
 
         },
         error: (err) => {
@@ -229,7 +259,7 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
 
       dialogRef.afterClosed().subscribe((result) => {
         console.log(result);
-        this.getInActiveEmp()
+        this.getInActiveCountEmp()
       })
     }
 
@@ -240,7 +270,7 @@ export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
           })
     
           dialogRef.afterClosed().subscribe((result) => {
-            this.getInActiveEmp()
+            this.getInActiveCountEmp()
           })
         }
   

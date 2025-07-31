@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, AfterViewInit, inject, OnDestroy, OnInit } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,12 +12,13 @@ import { EditEmployeeDialog } from '../dialog/edit-employee-dialog/edit-employee
 import { MatChipsModule } from '@angular/material/chips';
 import { Router, ActivatedRoute, RouterModule, RouterLink, RouterLinkActive } from '@angular/router'
 import { Employee } from '../../services/employee/employee';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil, forkJoin, retry, catchError, of, map } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog/confirm-dialog';
 import { ViewEmployeeDialog } from '../dialog/view/view-employee-dialog/view-employee-dialog';
 import { FormControl, UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AssignEmpToClient } from '../dialog/assign-emp-to-client/assign-emp-to-client';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 
 export interface PeriodicElement {
   name: string;
@@ -29,7 +30,7 @@ export interface PeriodicElement {
 
 @Component({
   selector: 'app-active-employee',
-  imports: [ MatMenuModule, FormsModule, ReactiveFormsModule, RouterModule, MatDialogModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
+  imports: [ MatMenuModule, FormsModule, MatSortModule, ReactiveFormsModule, RouterModule, MatDialogModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
   templateUrl: './active-employee.html',
   styleUrl: './active-employee.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,35 +39,82 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
 
 
   displayedColumns: string[] = ['serialNo', 'name', 'email', 'phone', 'address', 'status', 'action'];
-  dataSource = new MatTableDataSource([]);
+  activeEmp = new MatTableDataSource([]);
   activeCount: any
+  searchQuery: any = ""
+  page: number = 1;
+  limit: number = 10;
+  sortField: string = 'name'; 
+  sortOrder: string = 'asc';   
+  searchInputControl: UntypedFormControl = new UntypedFormControl()
   private destroy$ = new Subject<void>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private _matdialog: MatDialog, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee, private _router: Router, private _activeRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-  
-     this.getActiveEmp()
-    
+    this.getActiveCountEmp()
+    this.onSearch()
+  }
+
+  onSearch(): void {
+     this.searchInputControl.valueChanges
+     .pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      map(value => value?.trim().toLowerCase())
+     ).subscribe(value => {
+      this.searchQuery = value
+      this.getActiveCountEmp()
+      this.cdr.detectChanges()
+     })
+  }
+
+  onPageChange(event: PageEvent): void {
+      this.page = event.pageIndex + 1;
+      this.limit = event.pageSize;
+      this.getActiveCountEmp();
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    this.activeEmp.paginator = this.paginator;
+    this.activeEmp.sort = this.sort;
   }
 
-  getActiveEmp(): void {
-   this._empServices.getActiveEmp().pipe(takeUntil(this.destroy$)).subscribe(response => {
-      this.dataSource = response
+  getActiveCountEmp(): void {
+    const sort = `${this.sortField}:${this.sortOrder}`
+    forkJoin([
+      this._empServices.getActiveEmp(this.searchQuery, this.page, this.limit, sort).pipe(retry(3), catchError(err => of(null))),
+      this._empServices.employeeActiveCount(this.searchQuery).pipe(retry(3), catchError(err => of(null)))
+    ]).pipe(takeUntil(this.destroy$)).subscribe(([
+      activeEmp,
+      activecount,
+    ]) => {
+      this.activeEmp = activeEmp
+      this.activeCount = activecount.count
+      
       this.cdr.detectChanges()
     })
-
-    this._empServices.employeeActiveCount().pipe(takeUntil(this.destroy$)).subscribe(response => {
-      this.activeCount = response.count
-       this.cdr.detectChanges()
-    }) 
   }
+
+  // setSort(field: any): void {
+  //   if (this.sortField === field) {
+  //     this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+  //   } else {
+  //     this.sortField = field;
+  //     this.sortOrder = 'asc';
+  //   }
+  //   this.getActiveCountEmp();
+  // }
+
+  onSortChange(sort: Sort): void {
+    this.sortField = sort.active;
+    this.sortOrder = sort.direction || 'asc'; // fallback to asc if empty
+    this.getActiveCountEmp();
+  }
+
 
   ngOnDestroy(): void {
     this.destroy$.next()
@@ -105,7 +153,7 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
               verticalPosition: 'bottom'
             });
           }
-          this.getActiveEmp()
+          this.getActiveCountEmp()
 
         },
         error: (err) => {
@@ -159,7 +207,7 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
       })
 
       dialogRef.afterClosed().subscribe((result) => {
-        this.getActiveEmp()
+        this.getActiveCountEmp()
       })
     }
 
@@ -169,7 +217,7 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
       })
 
       dialogRef.afterClosed().subscribe((result) => {
-        this.getActiveEmp()
+        this.getActiveCountEmp()
       })
     }
 
