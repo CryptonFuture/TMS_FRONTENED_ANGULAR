@@ -41,6 +41,7 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
 
   displayedColumns: string[] = ['serialNo', 'name', 'description', 'client_id', 'status', 'is_deleted', 'action'];
   dataSource: any = new MatTableDataSource([]);
+  taskCount: any
 
   private destroy$ = new Subject<void>();
 
@@ -54,6 +55,10 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
 
   ngOnInit(): void {
     this.getTask()
+    this._taskServies.countTask().subscribe(response => {
+      this.taskCount = response.count
+      this.cdr.detectChanges()
+    })
   }
 
   getTask(): void {

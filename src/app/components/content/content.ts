@@ -3,6 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntil, Subject, forkJoin, retry, catchError, of } from 'rxjs'
 import { Employee } from '../../services/employee/employee';
+import { Task } from '../../services/task/task';
 
 @Component({
   selector: 'app-content',
@@ -14,9 +15,10 @@ export class Content implements OnDestroy, OnInit {
   countAll: any
   activeCount: any
   inActiveCount: any
+  taskCount: any
   private destroy$ = new Subject<void>();
 
-  constructor(private cdr: ChangeDetectorRef, private _empServices: Employee) {}
+  constructor(private _taskService: Task, private cdr: ChangeDetectorRef, private _empServices: Employee) {}
 
   ngOnInit(): void {
     this.count()
@@ -26,15 +28,18 @@ export class Content implements OnDestroy, OnInit {
     forkJoin([
       this._empServices.employeeAllCount().pipe(retry(3), catchError(err => of(null))),
       this._empServices.employeeActiveCount().pipe(retry(3), catchError(err => of(null))),
-      this._empServices.employeeInActiveCount().pipe(retry(3), catchError(err => of(null)))
+      this._empServices.employeeInActiveCount().pipe(retry(3), catchError(err => of(null))),
+      this._taskService.countTask().pipe(retry(3), catchError(err => of(null)))
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
       allcount,
       activecount,
-      inactivecount
+      inactivecount,
+      taskcount
     ]) => {
       this.countAll = allcount.count
       this.activeCount = activecount.count
       this.inActiveCount = inactivecount.count
+      this.taskCount = taskcount.count
       this.cdr.detectChanges()
     })
   }
