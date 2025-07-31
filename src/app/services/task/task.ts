@@ -105,4 +105,8 @@ export class Task {
 
       )
     }
+
+    countTask(): Observable<any> {
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/taskCount`)
+    }
 }
