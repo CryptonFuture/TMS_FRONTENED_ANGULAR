@@ -1,0 +1,130 @@
+<div class="d-flexs">
+    <mat-form-field class="input">
+        <input type="search" matInput placeholder="search...">
+    </mat-form-field>
+
+    <div>
+        <button class="mar-btn" matButton="filled" >
+                project count: {{ projectCount }}
+        </button>
+        <button class="mar-btn" matButton="filled" (click)="onAddProjectDialog()">
+            create Project
+        </button>
+    </div>
+</div>
+<div class="example-small-box mat-elevation-z4">
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="project">
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="serialNo">
+                <th mat-header-cell *matHeaderCellDef> Sno. </th>
+                <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="project_code">
+                <th mat-header-cell *matHeaderCellDef> Project Code </th>
+                <td mat-cell *matCellDef="let element"> {{element.project_code}} </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="project_name">
+                <th mat-header-cell *matHeaderCellDef> Project Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.project_name}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="working_hours">
+                <th mat-header-cell *matHeaderCellDef> Working Hours </th>
+                <td mat-cell *matCellDef="let element">  {{element.working_hours}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="projectstatus">
+                <th mat-header-cell *matHeaderCellDef> Project Status </th>
+                <td mat-cell *matCellDef="let element"> 
+                     <mat-chip class="custom-chip"
+                          [ngClass]="{
+                            'pending-chip': element.projectStatus === 'pending',
+                            'reject-chip': element.projectStatus === 'rejected',
+                            'completed-chip': element.projectStatus === 'completed'
+                        }">{{element.projectStatus}}</mat-chip> 
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> Status </th>
+                <td mat-cell *matCellDef="let element"> 
+                     <mat-chip class="custom-chip">{{element.status ? 'active': 'InActive'}}</mat-chip> 
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="is_deleted">
+                <th mat-header-cell *matHeaderCellDef> Is Deleted </th>
+                <td mat-cell *matCellDef="let element"> 
+                    <button [ngStyle]="{
+                    'background-color': element.is_deleted ? '#d3d3d3' : '',
+                    'color': element.is_deleted ? '#000000' : ''
+                    }" class="btn" [disabled]="element.is_deleted" matButton="elevated" (click)="toggleDeleted(element._id)">
+                       {{element.is_deleted ? 'IsDeleted' : 'IsNotDeleted'}}
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="is_allow_off_time">
+                <th mat-header-cell *matHeaderCellDef> Allow Off Time </th>
+                <td mat-cell *matCellDef="let element">
+                    <button (click)="toggleIsAllow(element)" class="btn" matButton="elevated">
+                        {{element.allow_for_off_time ? 'IsAllow' : 'IsNotAllow'}}
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> action </th>
+                <td mat-cell *matCellDef="let element">
+                    <button matIconButton [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="onViewProjectDialog(
+                            element._id,
+                            element.joc,
+                            element.designation,
+                            element.allow_for_off_time,
+                            element.description
+                        )">
+                            <mat-icon>plus</mat-icon>
+                            <span>View</span>
+                        </button>
+                        <button mat-menu-item (click)="onEditProjectDialog(element._id)">
+                            <mat-icon>edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                        <button mat-menu-item (click)="onDelete(element._id)">
+                            <mat-icon>delete</mat-icon>
+                            <span>Delete</span>
+                        </button>
+                    </mat-menu>
+
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="custom-header"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="columns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" [attr.colspan]="displayedColumns.length" style="
+                    text-align: center; padding: 8px;">
+                   <h1>No Record found</h1> 
+                </td>
+            </tr> 
+        </table>
+        <mat-paginator #paginator class="paginators"  
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                showFirstLastButtons
+            aria-label="Select page of periodic elements">
+        </mat-paginator>
+
+    </div>
+
+</div>

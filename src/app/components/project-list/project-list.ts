@@ -1,4 +1,4 @@
-import {  ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, AfterViewInit, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, AfterViewInit, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
@@ -23,88 +23,76 @@ import { ViewTaskDialog } from '../dialog/view/view-task-dialog/view-task-dialog
 import { EditTaskDialog } from '../dialog/edit-task-dialog/edit-task-dialog';
 import { CommonModule } from '@angular/common';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
+import { Project } from '../../services/project/project';
+import { AddProjectDialog } from '../dialog/add-project-dialog/add-project-dialog';
+import { ViewProjectDialog } from '../dialog/view/view-project-dialog/view-project-dialog';
+import { EditProjectDialog } from '../dialog/edit-project-dialog/edit-project-dialog';
 
-export interface Tasks {
-  serialNo: number;
-  name: string;
-  description: string;
-  client_id: string;
-  status: string;
+export interface Projects {
+  serialNo: Number,
+  project_code: Number;
+  project_name: String,
+  working_hours: Date,
+  joc: Number,
+  designation: string,
+  project_manager_id: string,
+  client_id: string,
+  manager_id: string,
+  start_date: Date,
+  end_date: Date,
+  allow_for_off_time: boolean,
+  description: String,
+  status: boolean
 }
 
 @Component({
-  selector: 'app-task-list',
+  selector: 'app-project-list',
   imports: [MatSortModule, CommonModule, MatMenuModule, FormsModule, ReactiveFormsModule, RouterModule, MatDialogModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
-  templateUrl: './task-list.html',
-  styleUrl: './task-list.scss'
+  templateUrl: './project-list.html',
+  styleUrl: './project-list.scss'
 })
-export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
-
-  displayedColumns: string[] = ['serialNo', 'name', 'description', 'client_id', 'status', 'is_deleted', 'action'];
-  task: any = new MatTableDataSource([]);
-  taskCount: any
-  searchQuery: any = ""
-  page: number = 1;
-  limit: number = 10;
-  sortField: string = 'name'; 
-  sortOrder: string = 'asc';   
-  searchInputControl: UntypedFormControl = new UntypedFormControl()
-
+export class ProjectList implements AfterViewInit, OnDestroy, OnInit {
+  displayedColumns: string[] = [
+    'serialNo', 
+    'project_code', 
+    'project_name', 
+    'working_hours',
+    'projectstatus', 
+    'status',
+    'is_deleted',
+    'is_allow_off_time',
+    'action'];
+  project: any = new MatTableDataSource([]);
+  projectCount: any
   private destroy$ = new Subject<void>();
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  constructor(private _projServices: Project, private _matdialog: MatDialog, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _router: Router, private _activeRoute: ActivatedRoute) {}
 
-  constructor(private _taskServies: Task, private _matdialog: MatDialog, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee, private _router: Router, private _activeRoute: ActivatedRoute) {}
+   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+   
 
   ngAfterViewInit(): void {
-    this.task.paginator = this.paginator;
-    this.task.sort = this.sort;
+    this.project.paginator = this.paginator;
   }
 
   ngOnInit(): void {
-    this.getTask()
-    this.onSearch()
+    this.getProject()
   }
 
-    onSearch(): void {
-      this.searchInputControl.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        map(value => value?.trim().toLowerCase())
-      ).subscribe(value => {
-        this.searchQuery = value
-        this.getTask()
-        this.cdr.detectChanges()
-       })
-    }
-
-  onPageChange(event: PageEvent): void {
-    this.page = event.pageIndex + 1;
-    this.limit = event.pageSize;
-    this.getTask();
-  }
-
-  onSortChange(sort: Sort): void {
-    this.sortField = sort.active;
-    this.sortOrder = sort.direction || 'asc';
-    this.getTask();
-  }
-
-  getTask(): void {
-    const sort = `${this.sortField}:${this.sortOrder}`
+  getProject(): void {
     forkJoin([
-      this._taskServies.getTask(this.searchQuery, this.page, this.limit, sort).pipe(retry(3), catchError(err => of(null))),
-      this._taskServies.countTask(this.searchQuery).pipe(retry(3), catchError(err => of(null)))
+      this._projServices.getProject().pipe(retry(3), catchError(err => of(null))),
+      this._projServices.countProject().pipe(retry(3), catchError(err => of(null)))
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
-      task,
-      taskcount
+      project,
+      projectCount
     ]) => {
-      this.task = task,
-      this.taskCount = taskcount.count
-      console.log(this.task, 'task');
-      
+      this.project = project,
+      this.projectCount = projectCount.count
+      console.log(this.project, 'task');
+      console.log(this.projectCount, 'count');
+
       this.cdr.detectChanges()
     })
   }
@@ -114,53 +102,15 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
     this.destroy$.complete()
   }
 
-  onAddTaskDialog(): void {
-    const dialogRef = this._matdialog.open(AddTaskDialog, {
-      width: '1000px'
-    })
-
-    dialogRef.afterClosed().subscribe((result) => {
-      // console.log(result);
-      this.getTask()
-    })
-  }
-
-  onEditTaskDialog(data: any): void {
-    const dialogRef = this._matdialog.open(EditTaskDialog, {
-      width: '1000px',
-      data: {data}
-    })
-
-    dialogRef.afterClosed().subscribe((result) => {
-      // console.log(result);
-      this.getTask()
-    })
-  }
-
-  onViewTaskDialog(id: string, name: string, description: string): void {
-    const dialogRef = this._matdialog.open(ViewTaskDialog, {
-      width: '1000px',
-      data: {
-        id: id,
-        name: name,
-        description: description
-      }
-    })
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
-    })
-  }
-
-  onDelete(id: string): void {
+   onDelete(id: string): void {
     const dialogRef = this._matdialog.open(ConfirmDialog, {
       width: '300px',
-      data: { message: 'Are you sure you want to delete this task?' }
+      data: { message: 'Are you sure you want to delete this project?' }
     });
 
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
-        this._taskServies.deleteTask(id).subscribe({
+        this._projServices.deleteProject(id).subscribe({
           next: (response) => {
             if (response.success) {
               this._snackBar.open(response.message, 'x', {
@@ -176,7 +126,7 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
                 verticalPosition: 'bottom'
               });
             }
-            this.getTask()
+            this.getProject()
 
           },
           error: (err) => {
@@ -194,12 +144,45 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
 
   }
 
-     toggleDeleted(id: string): void {
-        const element = this.task.find((item: any) => item._id === id);
+    toggleIsAllow(project: any): void {
+      const updateStatus = !project.allow_for_off_time
+      this._projServices.toggleIsAllow(project._id, updateStatus).subscribe({
+        next: (response) => {
+          project.allow_for_off_time = updateStatus;
+          this.cdr.detectChanges()
+
+           if(response.success) {
+             this._snackBar.open(response.message, 'x', {
+              duration: 1500,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            })
+
+          } else {
+             this._snackBar.open(response.error || 'Login failed. Please try again.', 'x', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
+          }
+        },
+        error: (err) => {
+            const errorMessage = err?.error?.error || 'Something went wrong on server.';
+            this._snackBar.open(errorMessage, 'x', {
+              duration: 2000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            });
+        }
+      })
+    }
+
+   toggleDeleted(id: string): void {
+        const element = this.project.find((item: any) => item._id === id);
          element.is_deleted = !element.is_deleted;
           element.is_deleted = true;
         if (element) {
-            this._taskServies.toggleDeleted(id).subscribe({
+            this._projServices.toggleDeleted(id).subscribe({
               next: (response) => {
               
                 if(response.success) {
@@ -230,6 +213,43 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
             })
           }
         }
+  
+        onAddProjectDialog(): void {
+          const dialogRef = this._matdialog.open(AddProjectDialog, {
+            width: '1000px'
+          })
+
+          dialogRef.afterClosed().subscribe((result) => {
+            this.getProject()
+          })
+        }
+
+        onEditProjectDialog(data: any): void {
+          const dialogRef = this._matdialog.open(EditProjectDialog, {
+            width: '1000px',
+            data: {data}
+          })
+
+          dialogRef.afterClosed().subscribe((result) => {
+            this.getProject()
+          })
+        }
+
+        onViewProjectDialog(id: string, joc: number, designation: string, allow_for_off_time: boolean, description: string): void {
+          const dialogRef = this._matdialog.open(ViewProjectDialog, {
+            width: '1000px',
+            data: {
+              id: id,
+              joc: joc,
+              designation: designation,
+              allow_for_off_time: allow_for_off_time,
+              description: description
+            }
+          })
+
+          dialogRef.afterClosed().subscribe((result) => {
+
+          })
+        }
 
 }
-
