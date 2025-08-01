@@ -38,7 +38,7 @@ export interface PeriodicElement {
 export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
 
 
-  displayedColumns: string[] = ['serialNo', 'name', 'email', 'phone', 'address', 'status', 'action'];
+  displayedColumns: string[] = ['serialNo', 'name', 'email', 'phone', 'address', 'status', 'admin', 'action'];
   activeEmp = new MatTableDataSource([]);
   activeCount: any
   searchQuery: any = ""
