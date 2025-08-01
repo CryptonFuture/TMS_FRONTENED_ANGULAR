@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { switchMap, tap, pipe, catchError, throwError, BehaviorSubject, Observable, of } from 'rxjs'
-import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { environment } from '../../environments/environments';
 import { AddTask, UpdateTask } from '../../Interface/task/task'
 
@@ -18,8 +18,19 @@ export class Task {
 
   constructor(private _httpclient: HttpClient) {}
 
-  getTask(): Observable<any> {
-      return this._httpclient.get(`${environment.baseUrl}/api/v1/getTask`).pipe(
+  getTask(search: string = "", page: number = 1, limit: number = 10, sort: string = 'name:asc'): Observable<any> {
+       let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+       params = params
+        .set('page', page.toString())
+        .set('limit', limit.toString())
+        .set('sort', sort)
+
+    return this._httpclient.get(`${environment.baseUrl}/api/v1/getTask`, {params}).pipe(
         switchMap(response => {
           const Task = (response as any).data ?? []
           return of(Task)
@@ -106,7 +117,12 @@ export class Task {
       )
     }
 
-    countTask(): Observable<any> {
-      return this._httpclient.get(`${environment.baseUrl}/api/v1/taskCount`)
+    countTask(search: string = ""): Observable<any> {
+       let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/taskCount`, {params})
     }
 }

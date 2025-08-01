@@ -49,10 +49,17 @@
       <td mat-cell *matCellDef="let element"> {{element.address}} </td>
     </ng-container>
 
-     <ng-container matColumnDef="status">
+    <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef> status </th>
       <td mat-cell *matCellDef="let element">
         <mat-chip class="custom-chip">{{element.active ? 'active': ''}}</mat-chip> 
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="admin">
+      <th mat-header-cell *matHeaderCellDef> admin </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-chip class="custom-chip">{{element.is_admin ? 'isAdmin': 'notAdmin'}}</mat-chip> 
       </td>
     </ng-container>
 
