@@ -13,7 +13,7 @@ import { Task } from '../../../../services/task/task';
   styleUrl: './view-task-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ViewTaskDialog {
+export class ViewTaskDialog implements OnInit, OnDestroy {
    private destroy$ = new Subject<void>();
 
    constructor(private _taskServices: Task, private cdr: ChangeDetectorRef, private _empServices: Employee, private dialogRef: MatDialogRef<ViewTaskDialog>, @Inject(MAT_DIALOG_DATA) public data: {
