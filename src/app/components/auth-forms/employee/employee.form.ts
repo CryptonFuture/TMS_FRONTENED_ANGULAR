@@ -14,7 +14,7 @@ export function createEmployeeForm(fb: FormBuilder): FormGroup {
         confirmPass: ['', [Validators.required, Validators.minLength(10)]],
         phone: ['', [Validators.required, Validators.pattern(/^\+92\d{10}$/)]],
         address: ['', [Validators.required]],
-        designation: ['', [Validators.required]],
+        designName: ['', [Validators.required]],
         department: ['', [Validators.required]],
         joiningDate: ['', [Validators.required]],
         description: ['']
@@ -27,7 +27,7 @@ export function updateEmployeeForm(fb: FormBuilder): FormGroup {
         email: [''],
         phone: ['', [Validators.required, Validators.pattern(/^\+92\d{10}$/)]],
         address: ['', [Validators.required]],
-        designation: ['', [Validators.required]],
+        designName: ['', [Validators.required]],
         department: ['', [Validators.required]],
         joiningDate: [''],
         description: [''],

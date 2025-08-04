@@ -40,13 +40,13 @@
 
       <mat-form-field>
         <mat-label>designation</mat-label>
-        <mat-select formControlName="designation">
-          <mat-option *ngFor="let design of des" [value]="design.name">{{design.name}}</mat-option>
+        <mat-select formControlName="designName">
+          <mat-option *ngFor="let design of des" [value]="design.designName">{{design.designName}}</mat-option>
           <mat-option *ngIf="des.length === 0" disabled>
             No record found
           </mat-option>
         </mat-select>
- <mat-error *ngIf="editEmployeeForm.get('designation')?.hasError('required')">
+ <mat-error *ngIf="editEmployeeForm.get('designName')?.hasError('required')">
           Designation is required
         </mat-error>
       </mat-form-field>

@@ -5,7 +5,7 @@
 
     <div>
         <button class="mar-btn" matButton="filled" >
-                project count: {{ projectCount }}
+                active project count: {{projectActiveCount}}
         </button>
         <button class="mar-btn" matButton="filled" (click)="onAddProjectDialog()">
             create Project
@@ -14,7 +14,7 @@
 </div>
 <div class="example-small-box mat-elevation-z4">
     <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="project">
+        <table mat-table [dataSource]="activeProject">
 
             <!-- Position Column -->
             <ng-container matColumnDef="serialNo">
@@ -90,11 +90,11 @@
                         <button mat-menu-item (click)="onViewProjectDialog(
                             element._id,
                             element.joc,
-                            element.designation,
+                            element.designName,
                             element.allow_for_off_time,
                             element.description
                         )">
-                            <mat-icon>plus</mat-icon>
+                            <mat-icon>visibility</mat-icon>
                             <span>View</span>
                         </button>
                         <button mat-menu-item (click)="onEditProjectDialog(element._id)">

@@ -19,7 +19,7 @@ export class ViewProjectDialog implements OnInit, OnDestroy {
      constructor(private _projServices: Project, private cdr: ChangeDetectorRef, private _empServices: Employee, private dialogRef: MatDialogRef<ViewProjectDialog>, @Inject(MAT_DIALOG_DATA) public data: {
       id: string, 
       joc: number, 
-      designation: string, 
+      designName: string, 
       allow_for_off_time: boolean, 
       description: string
     }) {}

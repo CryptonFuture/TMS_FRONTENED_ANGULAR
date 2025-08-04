@@ -6,27 +6,27 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { AddEmployeeDialog } from '../dialog/add-employee-dialog/add-employee-dialog';
+import { AddEmployeeDialog } from '../../dialog/add-employee-dialog/add-employee-dialog';
 import { MatMenuModule } from '@angular/material/menu';
-import { EditEmployeeDialog } from '../dialog/edit-employee-dialog/edit-employee-dialog';
+import { EditEmployeeDialog } from '../../dialog/edit-employee-dialog/edit-employee-dialog';
 import { MatChipsModule } from '@angular/material/chips';
 import { Router, ActivatedRoute, RouterModule, RouterLink, RouterLinkActive } from '@angular/router'
-import { Employee } from '../../services/employee/employee';
+import { Employee } from '../../../services/employee/employee';
 import { catchError, debounceTime, distinctUntilChanged, forkJoin, map, of, retry, Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmDialog } from '../confirm-dialog/confirm-dialog/confirm-dialog';
-import { ViewEmployeeDialog } from '../dialog/view/view-employee-dialog/view-employee-dialog';
+import { ConfirmDialog } from '../../confirm-dialog/confirm-dialog/confirm-dialog';
+import { ViewEmployeeDialog } from '../../dialog/view/view-employee-dialog/view-employee-dialog';
 import { FormControl, UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AddTaskDialog } from '../dialog/add-task-dialog/add-task-dialog';
-import { Task } from '../../services/task/task';
-import { ViewTaskDialog } from '../dialog/view/view-task-dialog/view-task-dialog';
-import { EditTaskDialog } from '../dialog/edit-task-dialog/edit-task-dialog';
+import { AddTaskDialog } from '../../dialog/add-task-dialog/add-task-dialog';
+import { Task } from '../../../services/task/task';
+import { ViewTaskDialog } from '../../dialog/view/view-task-dialog/view-task-dialog';
+import { EditTaskDialog } from '../../dialog/edit-task-dialog/edit-task-dialog';
 import { CommonModule } from '@angular/common';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
-import { Project } from '../../services/project/project';
-import { AddProjectDialog } from '../dialog/add-project-dialog/add-project-dialog';
-import { ViewProjectDialog } from '../dialog/view/view-project-dialog/view-project-dialog';
-import { EditProjectDialog } from '../dialog/edit-project-dialog/edit-project-dialog';
+import { Project } from '../../../services/project/project';
+import { AddProjectDialog } from '../../dialog/add-project-dialog/add-project-dialog';
+import { ViewProjectDialog } from '../../dialog/view/view-project-dialog/view-project-dialog';
+import { EditProjectDialog } from '../../dialog/edit-project-dialog/edit-project-dialog';
 
 export interface Projects {
   serialNo: Number,
@@ -46,12 +46,12 @@ export interface Projects {
 }
 
 @Component({
-  selector: 'app-project-list',
+  selector: 'app-inactive-project-list',
   imports: [MatSortModule, CommonModule, MatMenuModule, FormsModule, ReactiveFormsModule, RouterModule, MatDialogModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
-  templateUrl: './project-list.html',
-  styleUrl: './project-list.scss'
+  templateUrl: './inactive-project-list.html',
+  styleUrl: './inactive-project-list.scss'
 })
-export class ProjectList implements AfterViewInit, OnDestroy, OnInit {
+export class InactiveProjectList implements AfterViewInit, OnDestroy, OnInit {
   displayedColumns: string[] = [
     'serialNo', 
     'project_code', 
@@ -61,8 +61,8 @@ export class ProjectList implements AfterViewInit, OnDestroy, OnInit {
     'is_deleted',
     'is_allow_off_time',
     'action'];
-  project: any = new MatTableDataSource([]);
-  projectCount: any
+  InActiveProject: any = new MatTableDataSource([]);
+  projectInActiveCount: any
   private destroy$ = new Subject<void>();
 
   constructor(private _projServices: Project, private _matdialog: MatDialog, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _router: Router, private _activeRoute: ActivatedRoute) {}
@@ -70,26 +70,25 @@ export class ProjectList implements AfterViewInit, OnDestroy, OnInit {
    @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit(): void {
-    this.project.paginator = this.paginator;
+    this.InActiveProject.paginator = this.paginator;
   }
 
   ngOnInit(): void {
-    this.getProject()
+    this.getInActiveProject()
   }
 
-  getProject(): void {
+  getInActiveProject(): void {
     forkJoin([
-      this._projServices.getProject().pipe(retry(3), catchError(err => of(null))),
-      this._projServices.countProject().pipe(retry(3), catchError(err => of(null)))
+      this._projServices.getInActiveProject().pipe(retry(3), catchError(err => of(null))),
+      this._projServices.InActiveCountProject().pipe(retry(3), catchError(err => of(null)))
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
       project,
-      projectCount
+      inActiveProj
     ]) => {
-      this.project = project,
-      this.projectCount = projectCount.count
+      this.InActiveProject = project,
+      this.projectInActiveCount = inActiveProj.count
       
-      console.log(this.project, 'task');
-      console.log(this.projectCount, 'count');
+      console.log(this.InActiveProject, 'task');
       
       this.cdr.detectChanges()
     })
@@ -124,7 +123,7 @@ export class ProjectList implements AfterViewInit, OnDestroy, OnInit {
                 verticalPosition: 'bottom'
               });
             }
-            this.getProject()
+            this.getInActiveProject()
 
           },
           error: (err) => {
@@ -176,7 +175,7 @@ export class ProjectList implements AfterViewInit, OnDestroy, OnInit {
     }
 
    toggleDeleted(id: string): void {
-        const element = this.project.find((item: any) => item._id === id);
+        const element = this.InActiveProject.find((item: any) => item._id === id);
          element.is_deleted = !element.is_deleted;
           element.is_deleted = true;
         if (element) {
@@ -212,16 +211,6 @@ export class ProjectList implements AfterViewInit, OnDestroy, OnInit {
           }
         }
   
-        onAddProjectDialog(): void {
-          const dialogRef = this._matdialog.open(AddProjectDialog, {
-            width: '1000px'
-          })
-
-          dialogRef.afterClosed().subscribe((result) => {
-            this.getProject()
-          })
-        }
-
         onEditProjectDialog(data: any): void {
           const dialogRef = this._matdialog.open(EditProjectDialog, {
             width: '1000px',
@@ -229,17 +218,17 @@ export class ProjectList implements AfterViewInit, OnDestroy, OnInit {
           })
 
           dialogRef.afterClosed().subscribe((result) => {
-            this.getProject()
+            this.getInActiveProject()
           })
         }
 
-        onViewProjectDialog(id: string, joc: number, designation: string, allow_for_off_time: boolean, description: string): void {
+        onViewProjectDialog(id: string, joc: number, designName: string, allow_for_off_time: boolean, description: string): void {
           const dialogRef = this._matdialog.open(ViewProjectDialog, {
             width: '1000px',
             data: {
               id: id,
               joc: joc,
-              designation: designation,
+              designName: designName,
               allow_for_off_time: allow_for_off_time,
               description: description
             }
@@ -249,5 +238,4 @@ export class ProjectList implements AfterViewInit, OnDestroy, OnInit {
 
           })
         }
-
 }
