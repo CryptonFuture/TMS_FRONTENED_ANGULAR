@@ -82,7 +82,8 @@ export class RejectProjectList implements AfterViewInit, OnDestroy, OnInit {
 
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
       project,
-      rejProj
+      rejProj,
+      
     ]) => {
       this.rejectProject = project,
       this.projectRejectCount = rejProj.count
