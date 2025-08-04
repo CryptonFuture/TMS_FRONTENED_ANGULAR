@@ -33,6 +33,7 @@ export class AddProjectDialog implements OnInit, OnDestroy {
   projectForm: FormGroup
   des: any[] = []
   projectStatus: any[] = []
+  activeEmployee: any[] = []
   private destroy$ = new Subject<void>();
 
   constructor(private _projServices: Project, private dialogRef: MatDialogRef<AddProjectDialog>, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder) {
@@ -54,15 +55,16 @@ export class AddProjectDialog implements OnInit, OnDestroy {
   getDesDepProjectStatus(): void {
     forkJoin([
       this._desDep.getDesDep().pipe(retry(3), catchError(err => of(null))),
-      this._projServices.projectStatus().pipe(retry(3), catchError(err => of(null)))
+      this._projServices.projectStatus().pipe(retry(3), catchError(err => of(null))),
+      this._empService.getActiveEmp().pipe(retry(3), catchError(err => of(null)))
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
       designation,
       projStatus,
-      
+      activeEmp
     ]) => {
       this.des = designation.designation
       this.projectStatus = projStatus      
-    
+      this.activeEmployee = activeEmp
       this.cdr.detectChanges()
     })
   }

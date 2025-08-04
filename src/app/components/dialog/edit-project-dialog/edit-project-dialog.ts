@@ -31,6 +31,7 @@ export class EditProjectDialog implements OnInit, OnDestroy {
   editProjectForm: FormGroup
   des: any[] = []
   projectStatus: any[] = []
+  activeEmployee: any[] = []
 
   private destroy$ = new Subject<void>();
 
@@ -54,9 +55,9 @@ export class EditProjectDialog implements OnInit, OnDestroy {
           working_hours: response.data.working_hours,
           joc: response.data.joc,
           designName: response.data.designName,
-          project_manager_id: response.data.project_manager_id,
+          project_manager_id: response.data.project_manager_id?._id,
           client_id: response.data.client_id,
-          manager_id: response.data.manager_id,
+          manager_id: response.data.manager_id?._id,
           start_date: response.data.start_date,
           end_date: response.data.end_date,
           allow_for_off_time: response.data.allow_for_off_time,
@@ -66,20 +67,25 @@ export class EditProjectDialog implements OnInit, OnDestroy {
         })
          
       })
+
+      
+      
     this.getDesDepProjectStatus()
   }
 
    getDesDepProjectStatus(): void {
       forkJoin([
         this._desDep.getDesDep().pipe(retry(3), catchError(err => of(null))),
-        this._projServices.projectStatus().pipe(retry(3), catchError(err => of(null)))
+        this._projServices.projectStatus().pipe(retry(3), catchError(err => of(null))),
+          this._empService.getActiveEmp().pipe(retry(3), catchError(err => of(null)))
       ]).pipe(takeUntil(this.destroy$)).subscribe(([
         designation,
         projStatus,
-        
+         activeEmp
       ]) => {
         this.des = designation.designation
-        this.projectStatus = projStatus      
+        this.projectStatus = projStatus
+         this.activeEmployee = activeEmp      
       
         this.cdr.detectChanges()
       })
