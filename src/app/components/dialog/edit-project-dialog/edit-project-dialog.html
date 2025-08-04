@@ -42,13 +42,13 @@
 
       <mat-form-field>
         <mat-label>Designation</mat-label>
-        <mat-select formControlName="designation">
-          <mat-option *ngFor="let design of des" [value]="design.name">{{design.name}}</mat-option>
+        <mat-select formControlName="designName">
+          <mat-option *ngFor="let design of des" [value]="design.designName">{{design.designName}}</mat-option>
           <mat-option *ngIf="des.length === 0" disabled>
             No record found
           </mat-option>
         </mat-select>
-         <mat-error *ngIf="editProjectForm.get('designation')?.hasError('required')">
+         <mat-error *ngIf="editProjectForm.get('designName')?.hasError('required')">
           Designation is required
         </mat-error>
       </mat-form-field>
@@ -80,12 +80,13 @@
       <mat-form-field>
         <mat-label>Project Status</mat-label>
         <mat-select formControlName="projectStatus">
-          <mat-option>Pending</mat-option>
-           <mat-option>Rejected</mat-option>
-             <mat-option>Completed</mat-option>
+          <mat-option *ngFor="let projStatus of projectStatus" [value]="projStatus.projectStatus">{{projStatus.projectStatus}}</mat-option>
+          <mat-option *ngIf="projectStatus.length === 0" disabled>
+              No record found
+          </mat-option>
         </mat-select>
-         <mat-error *ngIf="editProjectForm.get('designation')?.hasError('required')">
-          Designation is required
+         <mat-error *ngIf="editProjectForm.get('projectStatus')?.hasError('required')">
+          projectStatus is required
         </mat-error>
       </mat-form-field>
 

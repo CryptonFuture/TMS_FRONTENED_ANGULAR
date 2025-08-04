@@ -42,13 +42,13 @@
 
       <mat-form-field>
         <mat-label>Designation</mat-label>
-        <mat-select formControlName="designation">
-          <mat-option *ngFor="let design of des" [value]="design.name">{{design.name}}</mat-option>
+        <mat-select formControlName="designName">
+          <mat-option *ngFor="let design of des" [value]="design.designName">{{design.designName}}</mat-option>
           <mat-option *ngIf="des.length === 0" disabled>
             No record found
           </mat-option>
         </mat-select>
-         <mat-error *ngIf="projectForm.get('designation')?.hasError('required')">
+         <mat-error *ngIf="projectForm.get('designName')?.hasError('required')">
           Designation is required
         </mat-error>
       </mat-form-field>
@@ -77,21 +77,34 @@
        
       </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Start Date</mat-label>
-      <input matInput [matDatepicker]="datepicker" formControlName="start_date">
-      <mat-datepicker #datepicker />
-      <mat-datepicker-toggle [for]="datepicker" matSuffix />
-    </mat-form-field>
+      <!-- <mat-form-field>
+        <mat-label>Project Status</mat-label>
+        <mat-select formControlName="projectStatus">
+          <mat-option *ngFor="let projStatus of projectStatus" [value]="projStatus.projectStatus">{{projStatus.projectStatus}}</mat-option>
+            <mat-option *ngIf="projectStatus.length === 0" disabled>
+              No record found
+            </mat-option>
+        </mat-select>
+         <mat-error *ngIf="projectForm.get('projectStatus')?.hasError('required')">
+          projectStatus is required
+        </mat-error>
+      </mat-form-field> -->
 
-    <mat-form-field>
+      <mat-form-field>
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="datepicker" formControlName="start_date">
+        <mat-datepicker #datepicker />
+        <mat-datepicker-toggle [for]="datepicker" matSuffix />
+      </mat-form-field>
+
+       <mat-form-field>
       <mat-label>End Date</mat-label>
       <input matInput [matDatepicker]="datepickers" formControlName="end_date">
       <mat-datepicker #datepickers />
       <mat-datepicker-toggle [for]="datepickers" matSuffix />
     </mat-form-field>
-
     </div>
+    
     <mat-form-field class="example-full-width">
       <mat-label>Description</mat-label>
       <textarea formControlName="description" class="input" matInput placeholder="description..." value=""></textarea>

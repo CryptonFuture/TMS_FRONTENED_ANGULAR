@@ -18,6 +18,11 @@ export class Content implements OnDestroy, OnInit {
   inActiveCount: any
   taskCount: any
   projectCount: any
+  projectActiveCount: any
+  projectInActiveCount: any
+  projectCompletedCount: any
+  projectPendingCount: any
+  projectRejectedCount: any
   private destroy$ = new Subject<void>();
 
   constructor(private _projService: Project, private _taskService: Task, private cdr: ChangeDetectorRef, private _empServices: Employee) {}
@@ -32,19 +37,34 @@ export class Content implements OnDestroy, OnInit {
       this._empServices.employeeActiveCount().pipe(retry(3), catchError(err => of(null))),
       this._empServices.employeeInActiveCount().pipe(retry(3), catchError(err => of(null))),
       this._taskService.countTask().pipe(retry(3), catchError(err => of(null))),
-      this._projService.countProject().pipe(retry(3), catchError(err => of(null)))
+      this._projService.countProject().pipe(retry(3), catchError(err => of(null))),
+      this._projService.activeCountProject().pipe(retry(3), catchError(err => of(null))),
+      this._projService.InActiveCountProject().pipe(retry(3), catchError(err => of(null))),
+      this._projService.CompletedCountProject().pipe(retry(3), catchError(err => of(null))),
+      this._projService.PendingCountProject().pipe(retry(3), catchError(err => of(null))),
+      this._projService.RejectedCountProject().pipe(retry(3), catchError(err => of(null)))
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
       allcount,
       activecount,
       inactivecount,
       taskcount,
-      projcount
+      projcount,
+      projActiveCount,
+      projInActiveCount,
+      projCompletedCount,
+      projPendingCount,
+      projRejectedCount
     ]) => {
       this.countAll = allcount.count
       this.activeCount = activecount.count
       this.inActiveCount = inactivecount.count
       this.taskCount = taskcount.count
       this.projectCount = projcount.count
+      this.projectActiveCount = projActiveCount.count
+      this.projectInActiveCount = projInActiveCount.count
+      this.projectCompletedCount = projCompletedCount.count
+      this.projectPendingCount = projPendingCount.count
+      this.projectRejectedCount = projRejectedCount.count
       this.cdr.detectChanges()
     })
   }

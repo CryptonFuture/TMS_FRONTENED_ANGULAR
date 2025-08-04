@@ -1,0 +1,97 @@
+<form class="example-form" [formGroup]="approvalProjectForm">
+  <h2 mat-dialog-title class="dialog-title">
+    Approval Project
+    <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+  <mat-dialog-content class="mat-typography">
+    <div class="form-grid">
+      <mat-form-field>
+        <mat-label>Project Code</mat-label>
+        <input [disabled]="true" formControlName="project_code" class="input" matInput placeholder="name..." value="">
+      </mat-form-field>
+
+       <mat-form-field>
+        <mat-label>Project Name</mat-label>
+        <input [disabled]="true" formControlName="project_name" class="input" matInput placeholder="name..." value="">
+      </mat-form-field>
+
+        <mat-form-field>
+        <mat-label>Working Hours</mat-label>
+        <input [disabled]="true" type="number" formControlName="working_hours" class="input" matInput placeholder="name..." value="">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Joc</mat-label>
+        <input [disabled]="true" type="number" formControlName="joc" class="input" matInput placeholder="name..." value="">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Designation</mat-label>
+        <input [disabled]="true" formControlName="designName" class="input" matInput placeholder="name..." value="">
+      </mat-form-field>
+
+       <mat-form-field>
+        <mat-label>Project manager Id</mat-label>
+        <input [disabled]="true" formControlName="project_manager_id" class="input" matInput placeholder="name..." value="">
+      </mat-form-field>
+
+       <mat-form-field>
+        <mat-label>Client Id</mat-label>
+        <input [disabled]="true" formControlName="client_id" class="input" matInput placeholder="name..." value="">
+      </mat-form-field>
+
+       <mat-form-field>
+        <mat-label>Manager Id</mat-label>
+        <input [disabled]="true" formControlName="manager_id" class="input" matInput placeholder="name..." value="">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Project Status</mat-label>
+        <input [disabled]="true" formControlName="projectStatus" class="input" matInput placeholder="name..." value="">
+      </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Start Date</mat-label>
+      <input [disabled]="true" matInput [matDatepicker]="datepicker" formControlName="start_date">
+      <mat-datepicker #datepicker />
+      <mat-datepicker-toggle [for]="datepicker" matSuffix />
+    </mat-form-field>
+
+    </div>
+
+     <mat-form-field class="example-full-width">
+      <mat-label>End Date</mat-label>
+      <input [disabled]="true" matInput [matDatepicker]="datepickers" formControlName="end_date">
+      <mat-datepicker #datepickers />
+      <mat-datepicker-toggle [for]="datepickers" matSuffix />
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Description</mat-label>
+      <textarea [disabled]="true" formControlName="description" class="input" matInput placeholder="description..." value=""></textarea>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="allow_for_off_time" [disabled]="true">Allow For Off Time</mat-checkbox>
+    <mat-checkbox formControlName="status" [disabled]="true">Status</mat-checkbox>
+
+     <mat-form-field class="example-full-width">
+      <mat-label>Remarks</mat-label>
+      <textarea formControlName="remarks" class="input" matInput placeholder="remarks..." value=""></textarea>
+     <mat-error *ngIf="approvalProjectForm.get('remarks')?.hasError('required')">
+          Remarks is required
+        </mat-error>
+    </mat-form-field>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button matButton mat-dialog-close>Cancel</button>
+    <button  [disabled]="approvalProjectForm.get('remarks')?.disabled" (click)="onCompleted()" class="button-color-blue" matButton="filled" cdkFocusInitial>
+      <span>completed</span>
+    </button>
+     <button  [disabled]="approvalProjectForm.get('remarks')?.disabled" (click)="onRejected()" class="button-color-red" matButton="filled" cdkFocusInitial>
+      <span>rejected</span>
+    </button>
+  </mat-dialog-actions>
+</form>

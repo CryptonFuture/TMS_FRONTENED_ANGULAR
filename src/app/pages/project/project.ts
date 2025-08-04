@@ -8,11 +8,11 @@ import { CommonModule } from '@angular/common'
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { Router, RouterModule } from '@angular/router'
-import { ProjectList } from '../../components/project-list/project-list';
+import { TabsProject } from '../../components/tabs-project/tabs-project';
 
 @Component({
   selector: 'app-project',
-  imports: [ProjectList, RouterModule, Footer, MatGridListModule, MatCardModule, MatSidenavModule, CommonModule, MatIconModule, MatMenuModule, MatButtonModule],
+  imports: [TabsProject, RouterModule, Footer, MatGridListModule, MatCardModule, MatSidenavModule, CommonModule, MatIconModule, MatMenuModule, MatButtonModule],
   templateUrl: './project.html',
   styleUrl: './project.scss'
 })

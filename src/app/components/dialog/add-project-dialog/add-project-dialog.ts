@@ -10,7 +10,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { Employee } from '../../../services/employee/employee';
 import { createEmployeeForm } from '../../auth-forms/employee/employee.form';
-import { Subject, takeUntil } from 'rxjs';
+import { catchError, forkJoin, of, retry, Subject, takeUntil } from 'rxjs';
 import { DesDep } from '../../../services/desDep/des-dep';
 import { User } from '../../../services/auth/user';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -32,6 +32,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class AddProjectDialog implements OnInit, OnDestroy {
   projectForm: FormGroup
   des: any[] = []
+  projectStatus: any[] = []
   private destroy$ = new Subject<void>();
 
   constructor(private _projServices: Project, private dialogRef: MatDialogRef<AddProjectDialog>, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder) {
@@ -47,13 +48,22 @@ export class AddProjectDialog implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getDesDep()
+    this.getDesDepProjectStatus()
   }
 
-  getDesDep(): void {
-    this._desDep.getDesDep().pipe(takeUntil(this.destroy$)).subscribe((response) => {
-      console.log(response, 'res');
-      this.des = response.designation
+  getDesDepProjectStatus(): void {
+    forkJoin([
+      this._desDep.getDesDep().pipe(retry(3), catchError(err => of(null))),
+      this._projServices.projectStatus().pipe(retry(3), catchError(err => of(null)))
+    ]).pipe(takeUntil(this.destroy$)).subscribe(([
+      designation,
+      projStatus,
+      
+    ]) => {
+      this.des = designation.designation
+      this.projectStatus = projStatus      
+    
+      this.cdr.detectChanges()
     })
   }
 

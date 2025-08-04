@@ -1,0 +1,69 @@
+<div class="d-flexs">
+    <mat-form-field class="input">
+        <input type="search" matInput placeholder="search...">
+    </mat-form-field>
+
+    <div>
+        <button class="mar-btn" matButton="filled" >
+                rejected project count: {{projectRejectCount}}
+        </button>
+    </div>
+</div>
+<div class="example-small-box mat-elevation-z4">
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="rejectProject">
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="serialNo">
+                <th mat-header-cell *matHeaderCellDef> Sno. </th>
+                <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="project_code">
+                <th mat-header-cell *matHeaderCellDef> Project Code </th>
+                <td mat-cell *matCellDef="let element"> {{element.project_code}} </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="project_name">
+                <th mat-header-cell *matHeaderCellDef> Project Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.project_name}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="working_hours">
+                <th mat-header-cell *matHeaderCellDef> Working Hours </th>
+                <td mat-cell *matCellDef="let element">  {{element.working_hours}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="projectstatus">
+                <th mat-header-cell *matHeaderCellDef> Project Status </th>
+                <td mat-cell *matCellDef="let element"> 
+                     <mat-chip class="custom-chip"
+                          [ngClass]="{
+                            'pending-chip': element.projectStatus === 'pending',
+                            'reject-chip': element.projectStatus === 'reject',
+                            'completed-chip': element.projectStatus === 'completed'
+                        }">{{element.projectStatus}}</mat-chip> 
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="custom-header"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="columns"></tr>
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" [attr.colspan]="displayedColumns.length" style="
+                    text-align: center; padding: 8px;">
+                   <h1>No Record found</h1> 
+                </td>
+            </tr> 
+        </table>
+        <mat-paginator #paginator class="paginators"  
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                showFirstLastButtons
+            aria-label="Select page of periodic elements">
+        </mat-paginator>
+
+    </div>
+
+</div>

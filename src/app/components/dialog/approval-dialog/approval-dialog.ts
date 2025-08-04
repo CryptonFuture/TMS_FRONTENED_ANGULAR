@@ -16,30 +16,31 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { createTaskForm, updateTaskForm } from '../../auth-forms/task/task.form';
 import { Project } from '../../../services/project/project';
-import { updateProjectForm } from '../../auth-forms/project/project.form';
+import { updateProjectForm, approvalProjectForm } from '../../auth-forms/project/project.form';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Approval } from '../../../services/approval/approval';
 
 @Component({
-  selector: 'app-edit-project-dialog',
+  selector: 'app-approval-dialog',
   imports: [MatCheckboxModule, CommonModule, MatSelectModule, ReactiveFormsModule, MatSnackBarModule, MatIconModule, MatDatepickerModule, MatTimepickerModule, MatDialogModule, MatInputModule, MatFormFieldModule, FormsModule, MatButtonModule],
-  templateUrl: './edit-project-dialog.html',
-  styleUrl: './edit-project-dialog.scss',
+  templateUrl: './approval-dialog.html',
+  styleUrl: './approval-dialog.scss',
   providers: [provideNativeDateAdapter()]
 })
-export class EditProjectDialog implements OnInit, OnDestroy {
+export class ApprovalDialog implements OnInit, OnDestroy {
 
-  editProjectForm: FormGroup
+  approvalProjectForm: FormGroup
   des: any[] = []
   projectStatus: any[] = []
 
   private destroy$ = new Subject<void>();
 
-  constructor(private _projServices: Project, private dialogRef: MatDialogRef<EditProjectDialog>, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder,  @Inject(MAT_DIALOG_DATA) public data: {data: any}) {
-    this.editProjectForm = updateProjectForm(this.fb)
+  constructor(private _approvalServices: Approval, private _projServices: Project, private dialogRef: MatDialogRef<ApprovalDialog>, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder,  @Inject(MAT_DIALOG_DATA) public data: {data: any}) {
+    this.approvalProjectForm = approvalProjectForm(this.fb)
   }
 
   get f() {
-    return this.editProjectForm.controls; 
+    return this.approvalProjectForm.controls; 
   }
 
   onCancel(): void {
@@ -48,7 +49,7 @@ export class EditProjectDialog implements OnInit, OnDestroy {
 
   ngOnInit(): void {
      this._projServices.editProjectById(this.data.data).pipe(takeUntil(this.destroy$)).subscribe(response => {
-        this.editProjectForm.patchValue({
+        this.approvalProjectForm.patchValue({
           project_code: response.data.project_code,
           project_name: response.data.project_name,
           working_hours: response.data.working_hours,
@@ -90,24 +91,25 @@ export class EditProjectDialog implements OnInit, OnDestroy {
     this.destroy$.complete()
   }
 
-   onSubmit(): void {
-      if(this.editProjectForm.invalid) {
+   onCompleted(): void {
+      if(this.approvalProjectForm.invalid) {
         return
       }
+        this.approvalProjectForm.get('remarks')?.disable();
+      const remarksValue = this.approvalProjectForm.get('remarks')?.value;
 
-      this.editProjectForm.disable()
-      this._projServices.updateProject(this.data.data, this.editProjectForm.value).subscribe({
+      this._approvalServices.updateApprovalCompletedProject(this.data.data, {remarks: remarksValue}).subscribe({
         next: (response) => {
-          this.editProjectForm.enable()
+          this.approvalProjectForm.get('remarks')?.enable();
            if(response.success) {
               this._snackBar.open(response.message, 'x', {
                 duration: 1500,
                 horizontalPosition: 'center',
                 verticalPosition: 'bottom'
               })
-              this.editProjectForm.reset()
-              Object.keys(this.editProjectForm.controls).forEach(key => {
-                this.editProjectForm.get(key)?.setErrors(null);
+              this.approvalProjectForm.get('remarks')?.reset();
+              Object.keys(this.approvalProjectForm.controls).forEach(key => {
+                this.approvalProjectForm.get(key)?.setErrors(null);
               });
               setTimeout(() => {
                 this.dialogRef.close()
@@ -123,11 +125,11 @@ export class EditProjectDialog implements OnInit, OnDestroy {
             }
         },
         error: (err) => {
-          this.editProjectForm.enable()
+           this.approvalProjectForm.get('remarks')?.enable();
           console.log(err);
   
-        Object.keys(this.editProjectForm.controls).forEach(key => {
-          this.editProjectForm.get(key)?.setErrors(null);
+        Object.keys(this.approvalProjectForm.controls).forEach(key => {
+          this.approvalProjectForm.get(key)?.setErrors(null);
         });
   
         this._snackBar.open('Something went wrong. Please try again.', 'x', {
@@ -140,5 +142,59 @@ export class EditProjectDialog implements OnInit, OnDestroy {
       })
    }
 
+   onRejected(): void {
+      if(this.approvalProjectForm.invalid) {
+        return
+      }
 
+      this.approvalProjectForm.get('remarks')?.disable();
+
+      const remarksValue = this.approvalProjectForm.get('remarks')?.value;
+
+      this._approvalServices.updateApprovalRejectedProject(this.data.data, {remarks: remarksValue}).subscribe({
+        next: (response) => {
+            this.approvalProjectForm.get('remarks')?.enable();
+
+           if(response.success) {
+              this._snackBar.open(response.message, 'x', {
+                duration: 1500,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom'
+              })
+              this.approvalProjectForm.get('remarks')?.reset();
+              Object.keys(this.approvalProjectForm.controls).forEach(key => {
+                this.approvalProjectForm.get(key)?.setErrors(null);
+              });
+              setTimeout(() => {
+                this.dialogRef.close()
+              }, 1500)
+            } else {
+              console.log(response.error?.error);
+              
+               this._snackBar.open(response.error?.error || 'Login failed. Please try again.', 'x', {
+                duration: 2000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom'
+              });
+            }
+        },
+        error: (err) => {
+          this.approvalProjectForm.get('remarks')?.enable();
+          console.log(err);
+  
+        Object.keys(this.approvalProjectForm.controls).forEach(key => {
+          this.approvalProjectForm.get(key)?.setErrors(null);
+        });
+  
+        this._snackBar.open('Something went wrong. Please try again.', 'x', {
+          duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
+          
+        }
+      })
+   }
+
+  
 }

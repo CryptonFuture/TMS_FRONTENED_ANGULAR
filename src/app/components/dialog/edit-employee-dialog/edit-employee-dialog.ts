@@ -44,7 +44,7 @@ export class EditEmployeeDialog implements OnInit, OnDestroy {
         address: response.data.address,
         description: response.data.description,
         joiningDate: response.data.joiningDate,
-        designation: response.data.designation,
+        designName: response.data.designName,
         department: response.data.department,
         active: response.data.active,
         is_admin: response.data.is_admin
