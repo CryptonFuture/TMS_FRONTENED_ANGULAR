@@ -8,6 +8,13 @@ export function createTaskForm(fb: FormBuilder): FormGroup {
     })
 }
 
+export function advanceFilterTaskForm(fb: FormBuilder): FormGroup {
+    return fb.group({
+        status: [''],
+        date: [''],
+    })
+}
+
 export function updateTaskForm(fb: FormBuilder): FormGroup {
     return fb.group({
         name: ['', Validators.required],

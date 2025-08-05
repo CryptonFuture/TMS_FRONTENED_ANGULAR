@@ -1,0 +1,35 @@
+  <form [formGroup]="taskAdvancedForm">
+  <h2 mat-dialog-title class="dialog-title">
+    Advance Filter Task
+    <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+  <mat-dialog-content class="mat-typography">
+    <mat-form-field>
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="">All</mat-option>
+          <mat-option value="true">Active</mat-option>
+          <mat-option value="false">InActive</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+     <mat-form-field>
+      <mat-label>Date</mat-label>
+      <input formControlName="date" matInput [matDatepicker]="datepicker">
+      <mat-datepicker #datepicker />
+      <mat-datepicker-toggle [for]="datepicker" matSuffix />
+     
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button matButton mat-dialog-close>Cancel</button>
+     <button (click)="clearFilter()" matButton="filled" cdkFocusInitial>
+        <span>ClearFilter</span>
+    </button>
+    <button (click)="onApplyFilter()" matButton="filled" cdkFocusInitial>
+        <span>ApplyFilter</span>
+    </button>
+  </mat-dialog-actions>
+  </form>
