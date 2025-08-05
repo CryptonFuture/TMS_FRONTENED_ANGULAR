@@ -40,7 +40,7 @@ export function approvalProjectForm(fb: FormBuilder): FormGroup {
 
 export function updateProjectForm(fb: FormBuilder): FormGroup {
     return fb.group({
-        project_code: ['', Validators.required],
+        project_code: [{value: false, disabled: true}],
         project_name: ['', Validators.required],
         working_hours: ['', Validators.required],
         joc: ['', Validators.required],

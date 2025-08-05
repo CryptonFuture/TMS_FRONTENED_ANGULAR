@@ -9,6 +9,7 @@ import { EditEmployeePage } from './pages/edit-employee-page/edit-employee-page'
 import { employeeGuard } from './guard/employee/employee-guard';
 import { Task } from './pages/task/task';
 import { Project } from './pages/project/project';
+import { Client } from './pages/client/client';
 
 export const routes: Routes = [
     {
@@ -83,6 +84,22 @@ export const routes: Routes = [
                 path: 'project',
                 loadChildren: () =>
                     import('./pages/project/project.routes').then((m) => m.projectRoutes)
+            },
+
+            
+        ]
+    },
+
+    // CLIENT
+
+    {
+        path: '',
+        component: Client,
+        children: [
+            {
+                path: 'client',
+                loadChildren: () =>
+                    import('./pages/client/client.routes').then((m) => m.clientRoutes)
             },
 
             
