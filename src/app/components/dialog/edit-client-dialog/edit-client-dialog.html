@@ -1,0 +1,86 @@
+ <form action="" [formGroup]="editClientForm">
+ <h2 mat-dialog-title class="dialog-title">
+    Edit Client
+    <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+  <mat-dialog-content class="mat-typography">
+    <div class="form-grid">
+         <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input formControlName="name" class="input" matInput placeholder="name..." value="">
+         <mat-error *ngIf="editClientForm.get('name')?.hasError('required')">
+          name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input formControlName="email" type="email" class="input" matInput placeholder="email..." value="">
+         <mat-error *ngIf="editClientForm.get('email')?.hasError('required')">
+          Email is required
+        </mat-error>
+
+        <mat-error
+          *ngIf="editClientForm.get('email')?.hasError('email')  && !editClientForm.get('email')?.hasError('required')">
+          Please enter a valid email address
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Phone</mat-label>
+        <input formControlName="phone" class="input" matInput placeholder="email..." value="">
+        <mat-error *ngIf="editClientForm.get('phone')?.hasError('required')">
+          Phone is required
+        </mat-error>
+
+        <mat-error *ngIf="editClientForm.get('phone')?.hasError('pattern')">
+          Enter valid phone number (e.g. +923001234567)
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input formControlName="address" class="input" matInput placeholder="email..." value="">
+         <mat-error *ngIf="editClientForm.get('address')?.hasError('required')">
+          Address is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Start Time</mat-label>
+        <input formControlName="startTime" matInput [matTimepicker]="picker">
+        <mat-timepicker-toggle matIconSuffix [for]="picker"/>
+        <mat-timepicker #picker/>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>End Time</mat-label>
+        <input formControlName="endTime" matInput [matTimepicker]="picker">
+        <mat-timepicker-toggle matIconSuffix [for]="picker"/>
+        <mat-timepicker #picker/>
+      </mat-form-field>
+
+    </div>
+
+     <mat-form-field class="example-full-width">
+      <mat-label>Description</mat-label>
+      <textarea formControlName="description"  matInput placeholder="Ex. It makes me feel..."></textarea>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="status">Status</mat-checkbox>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button matButton mat-dialog-close>Cancel</button>
+    <button  [disabled]="editClientForm.disabled" (click)="onSubmit()" matButton="filled" cdkFocusInitial>
+       @if(!editClientForm.disabled) {
+      <span>Update</span>
+      }
+      @if (editClientForm.disabled) {
+      <span>Update</span>
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

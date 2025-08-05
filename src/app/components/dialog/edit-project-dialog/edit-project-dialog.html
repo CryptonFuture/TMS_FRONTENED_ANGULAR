@@ -9,7 +9,7 @@
     <div class="form-grid">
       <mat-form-field>
         <mat-label>Project Code</mat-label>
-        <input readonly formControlName="project_code" class="input" matInput placeholder="name..." value="">
+        <input [disabled]="true" formControlName="project_code" class="input" matInput placeholder="name..." value="">
         <mat-error *ngIf="editProjectForm.get('project_code')?.hasError('required')">
           project code is required
         </mat-error>

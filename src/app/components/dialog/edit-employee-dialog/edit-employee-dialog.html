@@ -10,12 +10,12 @@
     <div class="form-grid">
       <mat-form-field>
         <mat-label>Name</mat-label>
-        <input readonly formControlName="name" class="input" matInput placeholder="name..." value="">
+        <input [disabled]="true" formControlName="name" class="input" matInput placeholder="name..." value="">
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Email</mat-label>
-        <input readonly formControlName="email" type="email" class="input" matInput placeholder="email..." value="">
+        <input [disabled]="true" formControlName="email" type="email" class="input" matInput placeholder="email..." value="">
       </mat-form-field>
 
       <mat-form-field>
@@ -68,7 +68,7 @@
 
     <mat-form-field>
       <mat-label>joining date</mat-label>
-      <input readonly matInput [matDatepicker]="datepicker" formControlName="joiningDate">
+      <input [disabled]="true" matInput [matDatepicker]="datepicker" formControlName="joiningDate">
       <mat-datepicker #datepicker />
       <mat-datepicker-toggle [for]="datepicker" matSuffix />
       

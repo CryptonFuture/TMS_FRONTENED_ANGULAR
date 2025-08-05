@@ -1,0 +1,113 @@
+  <form [formGroup]="clientForm">
+  <h2 mat-dialog-title class="dialog-title">
+    Add Client
+    <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+  <mat-dialog-content class="mat-typography">
+    <div class="form-grid">
+         <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input formControlName="name" class="input" matInput placeholder="name..." value="">
+         <mat-error *ngIf="clientForm.get('name')?.hasError('required')">
+          name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input formControlName="email" type="email" class="input" matInput placeholder="email..." value="">
+         <mat-error *ngIf="clientForm.get('email')?.hasError('required')">
+          Email is required
+        </mat-error>
+
+        <mat-error
+          *ngIf="clientForm.get('email')?.hasError('email')  && !clientForm.get('email')?.hasError('required')">
+          Please enter a valid email address
+        </mat-error>
+      </mat-form-field>
+
+       <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input formControlName="password" type="password" class="input" matInput placeholder="email..." value="">
+          <mat-error *ngIf="clientForm.get('password')?.hasError('required')">
+            Password is required
+          </mat-error>
+          <mat-error
+            *ngIf="clientForm.get('password')?.hasError('minlength') && !clientForm.get('password')?.hasError('required')">
+            Password must be at least 10 characters
+          </mat-error>
+
+          <mat-error *ngIf="clientForm.hasError('passwordMismatch') && clientForm.get('confirmPass')?.touched">
+            Passwords do not match
+          </mat-error>
+      </mat-form-field>
+
+       <mat-form-field>
+        <mat-label>ConfirmPass</mat-label>
+        <input formControlName="confirmPass" type="password" class="input" matInput placeholder="email..." value="">
+         <mat-error *ngIf="clientForm.get('confirmPass')?.hasError('required')">
+          Confirm Password is required
+        </mat-error>
+        <mat-error
+          *ngIf="clientForm.get('confirmPass')?.hasError('minlength') && !clientForm.get('confirmPass')?.hasError('required')">
+          Confirm Password must be at least 10 characters
+        </mat-error>
+
+
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Phone</mat-label>
+        <input formControlName="phone" class="input" matInput placeholder="email..." value="">
+         <mat-error *ngIf="clientForm.get('phone')?.hasError('required')">
+          Phone is required
+        </mat-error>
+
+        <mat-error *ngIf="clientForm.get('phone')?.hasError('pattern')">
+          Enter valid phone number (e.g. +923001234567)
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input formControlName="address" class="input" matInput placeholder="email..." value="">
+         <mat-error *ngIf="clientForm.get('address')?.hasError('required')">
+          Address is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Start Time</mat-label>
+        <input formControlName="startTime" matInput [matTimepicker]="picker">
+        <mat-timepicker-toggle matIconSuffix [for]="picker"/>
+        <mat-timepicker #picker/>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>End Time</mat-label>
+        <input formControlName="endTime" matInput [matTimepicker]="picker1">
+        <mat-timepicker-toggle matIconSuffix [for]="picker1"/>
+        <mat-timepicker #picker1/>
+      </mat-form-field>
+
+    </div>
+
+     <mat-form-field class="example-full-width">
+      <mat-label>Description</mat-label>
+      <textarea formControlName="description"  matInput placeholder="Ex. It makes me feel..."></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button matButton mat-dialog-close>Cancel</button>
+    <button [disabled]="clientForm.disabled" (click)="onSubmit()" matButton="filled" cdkFocusInitial>
+       @if(!clientForm.disabled) {
+      <span>Add</span>
+      }
+      @if (clientForm.disabled) {
+      <span>Add</span>
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

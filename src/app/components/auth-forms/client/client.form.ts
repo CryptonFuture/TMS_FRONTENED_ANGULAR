@@ -6,32 +6,29 @@ export const passwordMatchValidator: ValidatorFn = (form: AbstractControl): Vali
   return password && confirmPass && password !== confirmPass ? { passwordMismatch: true } : null;
 };
 
-export function createEmployeeForm(fb: FormBuilder): FormGroup {
+export function createClientForm(fb: FormBuilder): FormGroup {
     return fb.group({
-        name: ['', [Validators.required]],
+        name: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(10)]],
         confirmPass: ['', [Validators.required, Validators.minLength(10)]],
         phone: ['', [Validators.required, Validators.pattern(/^\+92\d{10}$/)]],
         address: ['', [Validators.required]],
-        designName: ['', [Validators.required]],
-        department: ['', [Validators.required]],
-        joiningDate: ['', [Validators.required]],
+        startTime: [''],
+        endTime: [''],
         description: ['']
-    } , { validators: passwordMatchValidator })
+    }, { validators: passwordMatchValidator })
 }
 
-export function updateEmployeeForm(fb: FormBuilder): FormGroup {
+export function updateClientForm(fb: FormBuilder): FormGroup {
     return fb.group({
-        name: [{value: false, disabled: true}],
-        email: [{value: false, disabled: true}],
+        name: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
         phone: ['', [Validators.required, Validators.pattern(/^\+92\d{10}$/)]],
         address: ['', [Validators.required]],
-        designName: ['', [Validators.required]],
-        department: ['', [Validators.required]],
-        joiningDate: [{value: false, disabled: true}],
+        startTime: [''],
+        endTime: [''],
         description: [''],
-        active: [false],
-        is_admin: [false]
+        status: [false]
     }, { validators: passwordMatchValidator })
 }

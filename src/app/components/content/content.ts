@@ -5,6 +5,7 @@ import { takeUntil, Subject, forkJoin, retry, catchError, of } from 'rxjs'
 import { Employee } from '../../services/employee/employee';
 import { Task } from '../../services/task/task';
 import { Project } from '../../services/project/project';
+import { Client } from '../../services/client/client';
 
 @Component({
   selector: 'app-content',
@@ -23,9 +24,12 @@ export class Content implements OnDestroy, OnInit {
   projectCompletedCount: any
   projectPendingCount: any
   projectRejectedCount: any
+  clientCount: any
+  clientExistCount: any
+  clientNonExistCount: any
   private destroy$ = new Subject<void>();
 
-  constructor(private _projService: Project, private _taskService: Task, private cdr: ChangeDetectorRef, private _empServices: Employee) {}
+  constructor(private _clientService: Client, private _projService: Project, private _taskService: Task, private cdr: ChangeDetectorRef, private _empServices: Employee) {}
 
   ngOnInit(): void {
     this.count()
@@ -42,7 +46,10 @@ export class Content implements OnDestroy, OnInit {
       this._projService.InActiveCountProject().pipe(retry(3), catchError(err => of(null))),
       this._projService.CompletedCountProject().pipe(retry(3), catchError(err => of(null))),
       this._projService.PendingCountProject().pipe(retry(3), catchError(err => of(null))),
-      this._projService.RejectedCountProject().pipe(retry(3), catchError(err => of(null)))
+      this._projService.RejectedCountProject().pipe(retry(3), catchError(err => of(null))),
+      this._clientService.countClient().pipe(retry(3), catchError(err => of(null))),
+      this._clientService.countExistingClient().pipe(retry(3), catchError(err => of(null))),
+      this._clientService.countNonExistingClient().pipe(retry(3), catchError(err => of(null)))
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
       allcount,
       activecount,
@@ -53,7 +60,10 @@ export class Content implements OnDestroy, OnInit {
       projInActiveCount,
       projCompletedCount,
       projPendingCount,
-      projRejectedCount
+      projRejectedCount,
+      clieCount,
+      clieExistCount,
+      clieNonExistCount
     ]) => {
       this.countAll = allcount.count
       this.activeCount = activecount.count
@@ -65,6 +75,9 @@ export class Content implements OnDestroy, OnInit {
       this.projectCompletedCount = projCompletedCount.count
       this.projectPendingCount = projPendingCount.count
       this.projectRejectedCount = projRejectedCount.count
+      this.clientCount = clieCount.count
+      this.clientExistCount = clieExistCount.count
+      this.clientNonExistCount = clieNonExistCount.count
       this.cdr.detectChanges()
     })
   }
