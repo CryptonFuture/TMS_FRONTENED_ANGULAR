@@ -7,6 +7,9 @@
         <button class="mar-btn" matButton="filled" >
                 task count: {{ taskCount }}
         </button>
+         <button class="mar-btn" matButton="filled" (click)="onAdvancedTaskFilterDialog()">
+            advanced filter
+        </button>
         <button class="mar-btn" matButton="filled" (click)="onAddTaskDialog()">
             create Task
         </button>
@@ -46,6 +49,15 @@
                      <mat-chip class="custom-chip">{{element.status ? 'active': 'InActive'}}</mat-chip>
                 </td>
             </ng-container>
+
+             <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef> createdAt </th>
+                <td mat-cell *matCellDef="let element">
+                     {{element.createdAt | date: 'yyyy-MM-dd'}}
+                </td>
+            </ng-container>
+
+            
 
              <ng-container matColumnDef="is_deleted">
                 <th mat-header-cell *matHeaderCellDef> Is Deleted </th>

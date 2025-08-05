@@ -23,6 +23,7 @@ import { ViewTaskDialog } from '../dialog/view/view-task-dialog/view-task-dialog
 import { EditTaskDialog } from '../dialog/edit-task-dialog/edit-task-dialog';
 import { CommonModule } from '@angular/common';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
+import { AdvancedFilterTaskDialog } from '../dialog/add-task-dialog/advanced-filter-task-dialog/advanced-filter-task-dialog';
 
 export interface Tasks {
   serialNo: number;
@@ -40,10 +41,12 @@ export interface Tasks {
 })
 export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
 
-  displayedColumns: string[] = ['serialNo', 'name', 'description', 'client_id', 'status', 'is_deleted', 'action'];
+  displayedColumns: string[] = ['serialNo', 'name', 'description', 'client_id', 'status', 'createdAt', 'is_deleted', 'action'];
   task: any = new MatTableDataSource([]);
   taskCount: any
   searchQuery: any = ""
+  date: any = ""
+  status: any = ""
   page: number = 1;
   limit: number = 10;
   sortField: string = 'name'; 
@@ -95,8 +98,8 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
   getTask(): void {
     const sort = `${this.sortField}:${this.sortOrder}`
     forkJoin([
-      this._taskServies.getTask(this.searchQuery, this.page, this.limit, sort).pipe(retry(3), catchError(err => of(null))),
-      this._taskServies.countTask(this.searchQuery).pipe(retry(3), catchError(err => of(null)))
+      this._taskServies.getTask(this.searchQuery, this.page, this.limit, sort, this.status, this.date).pipe(retry(3), catchError(err => of(null))),
+      this._taskServies.countTask(this.searchQuery, this.status, this.date).pipe(retry(3), catchError(err => of(null)))
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
       task,
       taskcount
@@ -149,6 +152,36 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
+    })
+  }
+
+  
+
+  onAdvancedTaskFilterDialog(): void {
+     const dialogRef = this._matdialog.open(AdvancedFilterTaskDialog, {
+      width: '400px',
+   
+    })
+
+    dialogRef.afterClosed().subscribe((filters: any) => {
+     if (filters) {
+      const { status, date } = filters;
+
+        this._taskServies.getTask('', 1, 10, 'name:asc', status)
+          .subscribe((response) => {
+            this.task = response; 
+            this.cdr.detectChanges()
+        });
+
+        this._taskServies.countTask('', status).subscribe((response) => {
+          this.taskCount = response.count; 
+          this.cdr.detectChanges()
+
+        })
+      }
+
+     
+      
     })
   }
 

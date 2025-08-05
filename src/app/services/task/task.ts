@@ -18,10 +18,22 @@ export class Task {
 
   constructor(private _httpclient: HttpClient) {}
 
-  getTask(search: string = "", page: number = 1, limit: number = 10, sort: string = 'name:asc'): Observable<any> {
+  getTask(search: any = "", page: any = 1, limit: any = 10, sort: any = 'name:asc', status: any = "", date: any = "",): Observable<any> {
        let params = new HttpParams()
 
       if(search) {
+        params = params.set('search', search)
+      }
+
+      if(status) {
+        params = params.set('status', status)
+      }
+
+       if(date) {
+        params = params.set('date', date)
+      }
+
+       if(search) {
         params = params.set('search', search)
       }
 
@@ -117,11 +129,19 @@ export class Task {
       )
     }
 
-    countTask(search: string = ""): Observable<any> {
+    countTask(search: string = "", status: any = "", date: any = ""): Observable<any> {
        let params = new HttpParams()
 
       if(search) {
         params = params.set('search', search)
+      }
+
+      if(status) {
+        params = params.set('status', status)
+      }
+
+       if(date) {
+        params = params.set('date', date)
       }
       return this._httpclient.get(`${environment.baseUrl}/api/v1/taskCount`, {params})
     }
