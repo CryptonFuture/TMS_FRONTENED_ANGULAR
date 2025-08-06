@@ -33,10 +33,6 @@ export class Task {
         params = params.set('date', date)
       }
 
-       if(search) {
-        params = params.set('search', search)
-      }
-
        params = params
         .set('page', page.toString())
         .set('limit', limit.toString())

@@ -51,12 +51,21 @@ export class NonExistingClient implements AfterViewInit, OnDestroy, OnInit {
    displayedColumns: string[] = ['serialNo', 'name', 'email', 'description', 'start_time', 'end_time', 'status', 'is_deleted', 'action'];
     NonExistClient: any = new MatTableDataSource([]);
     NonExistCount: any
+    searchQuery: any = ""
+    description: any = ""
+    status: any = ""
+    page: number = 1;
+    limit: number = 10;
+    sortField: string = 'name'; 
+    sortOrder: string = 'asc';   
+    searchInputControl: UntypedFormControl = new UntypedFormControl()
 
     private destroy$ = new Subject<void>();
 
     constructor(private _clientService: Client, private _taskServies: Task, private _matdialog: MatDialog, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee, private _router: Router, private _activeRoute: ActivatedRoute) {}
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
+    @ViewChild(MatSort) sort!: MatSort;
 
     ngAfterViewInit(): void {
       this.NonExistClient.paginator = this.paginator;
@@ -64,12 +73,39 @@ export class NonExistingClient implements AfterViewInit, OnDestroy, OnInit {
 
     ngOnInit(): void {
       this.getClientCount()
+      this.onSearch()
+    }
+
+    onSearch(): void {
+      this.searchInputControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        map(value => value?.trim().toLowerCase())
+      ).subscribe(value => {
+        this.searchQuery = value
+        this.getClientCount()
+        this.cdr.detectChanges()
+       })
+    }
+
+    onPageChange(event: PageEvent): void {
+      this.page = event.pageIndex + 1;
+      this.limit = event.pageSize;
+      this.getClientCount();
+    }
+
+    onSortChange(sort: Sort): void {
+      this.sortField = sort.active;
+      this.sortOrder = sort.direction || 'asc';
+      this.getClientCount();
     }
 
     getClientCount(): void {
+      const sort = `${this.sortField}:${this.sortOrder}`
       forkJoin([
-        this._clientService.getNonExistingClient().pipe(retry(3), catchError(err => of(null))),
-        this._clientService.countNonExistingClient().pipe(retry(3), catchError(err => of(null)))
+        this._clientService.getNonExistingClient(this.searchQuery, this.page, this.limit, sort, this.description).pipe(retry(3), catchError(err => of(null))),
+        this._clientService.countNonExistingClient(this.searchQuery, this.description).pipe(retry(3), catchError(err => of(null)))
       ]).pipe(takeUntil(this.destroy$)).subscribe(([
         nonExistingClient,
         countNonExisting

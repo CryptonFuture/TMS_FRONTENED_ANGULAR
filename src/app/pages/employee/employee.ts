@@ -9,10 +9,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { Router, RouterModule } from '@angular/router'
 import { Tabs } from '../../components/tabs/tabs';
+import { Logout } from '../../components/logout/logout';
 
 @Component({
   selector: 'app-employee',
-  imports: [RouterModule, Tabs, Footer, MatGridListModule, MatCardModule, MatSidenavModule, CommonModule, MatIconModule, MatMenuModule, MatButtonModule],
+  imports: [Logout, RouterModule, Tabs, Footer, MatGridListModule, MatCardModule, MatSidenavModule, CommonModule, MatIconModule, MatMenuModule, MatButtonModule],
   templateUrl: './employee.html',
   styleUrl: './employee.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -20,6 +20,7 @@ import { createTaskForm, updateTaskForm } from '../../auth-forms/task/task.form'
 import { Project } from '../../../services/project/project';
 import { createProjectForm } from '../../auth-forms/project/project.form';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Client } from '../../../services/client/client';
 
 @Component({
   selector: 'app-add-project-dialog',
@@ -34,9 +35,10 @@ export class AddProjectDialog implements OnInit, OnDestroy {
   des: any[] = []
   projectStatus: any[] = []
   activeEmployee: any[] = []
+  client: any[] = []
   private destroy$ = new Subject<void>();
 
-  constructor(private _projServices: Project, private dialogRef: MatDialogRef<AddProjectDialog>, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder) {
+  constructor(private _clientService: Client, private _projServices: Project, private dialogRef: MatDialogRef<AddProjectDialog>, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder) {
     this.projectForm = createProjectForm(this.fb)
   }
 
@@ -56,15 +58,18 @@ export class AddProjectDialog implements OnInit, OnDestroy {
     forkJoin([
       this._desDep.getDesDep().pipe(retry(3), catchError(err => of(null))),
       this._projServices.projectStatus().pipe(retry(3), catchError(err => of(null))),
-      this._empService.getActiveEmp().pipe(retry(3), catchError(err => of(null)))
+      this._empService.getActiveEmp().pipe(retry(3), catchError(err => of(null))),
+      this._clientService.getExistingClient().pipe(retry(3), catchError(err => of(null)))
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
       designation,
       projStatus,
-      activeEmp
+      activeEmp,
+      cli
     ]) => {
       this.des = designation.designation
       this.projectStatus = projStatus      
       this.activeEmployee = activeEmp
+      this.client = cli
       this.cdr.detectChanges()
     })
   }

@@ -156,7 +156,6 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
   }
 
   
-
   onAdvancedTaskFilterDialog(): void {
      const dialogRef = this._matdialog.open(AdvancedFilterTaskDialog, {
       width: '400px',
@@ -178,12 +177,28 @@ export class TaskList implements AfterViewInit, OnDestroy, OnInit  {
           this.cdr.detectChanges()
 
         })
+      } else {
+        this.resetFilters()
       }
 
      
       
     })
   }
+
+  resetFilters(): void {
+  this._taskServies.getTask('', 1, 10, 'name:asc', '')
+    .subscribe((response) => {
+      this.task = response;
+      this.cdr.detectChanges();
+    });
+
+  this._taskServies.countTask('', '').subscribe((response) => {
+    this.taskCount = response.count;
+    this.cdr.detectChanges();
+  });
+}
+
 
   onDelete(id: string): void {
     const dialogRef = this._matdialog.open(ConfirmDialog, {

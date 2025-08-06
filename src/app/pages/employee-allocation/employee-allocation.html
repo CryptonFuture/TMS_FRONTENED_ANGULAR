@@ -6,7 +6,7 @@
       </div>
 
       <div class="drawer-content">
-        <button routerLink="/dashboard" 
+        <button   routerLink="/dashboard" 
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }" mat-button class="drawer-item">
           <mat-icon>home</mat-icon>
@@ -63,7 +63,7 @@
       </div>
 
       <div class="drawer-footer">
-       
+     
       </div>
     </div>
   </mat-drawer>
@@ -89,14 +89,14 @@
                 <mat-icon>settings</mat-icon>
                 <span>Settings</span>
             </button>
-            <app-logout></app-logout>
+          <app-logout></app-logout>
         </mat-menu>
     </header>
 
     
     <main class="main-content">
-     <h2>Task</h2>
-     <app-task-list></app-task-list>
+     <h2>Employee Allocation</h2>
+     <app-tabs-employee-allocation></app-tabs-employee-allocation>
     </main>
 
     <app-footer></app-footer>

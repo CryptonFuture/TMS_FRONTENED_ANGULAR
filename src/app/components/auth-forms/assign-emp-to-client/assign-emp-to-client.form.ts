@@ -4,5 +4,7 @@ export function createAssignEmpToClientForm(fb: FormBuilder): FormGroup {
     return fb.group({
         emp_id: ['', Validators.required],
         client_id: [null],
+        proj_id: [null],
+        description: ['']
     })
 }

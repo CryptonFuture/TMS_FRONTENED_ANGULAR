@@ -6,6 +6,7 @@
     </button>
   </h2>
   <mat-dialog-content class="mat-typography">
+     <div class="form-grid">
     <mat-form-field>
       <mat-label>Employee Name</mat-label>
       <mat-select formControlName="emp_id">
@@ -22,10 +23,28 @@
     <mat-form-field>
       <mat-label>Client Name</mat-label>
       <mat-select formControlName="client_id">
-        <mat-option></mat-option>
+        <mat-option *ngFor="let existClient of existingClient" [value]="existClient._id">{{existClient.name}}</mat-option>
+        <mat-option *ngIf="existingClient.length === 0" disabled>
+          No record found
+        </mat-option>
+      </mat-select>
+    
+    </mat-form-field>
+</div>
+   <mat-form-field>
+      <mat-label>Project Name</mat-label>
+      <mat-select formControlName="proj_id">
+        <mat-option *ngFor="let proj of project" [value]="proj._id">{{proj.project_name}}</mat-option>
+        <mat-option *ngIf="project.length === 0" disabled>
+          No record found
+        </mat-option>
       </mat-select>
     </mat-form-field>
 
+     <mat-form-field class="example-full-width">
+      <mat-label>Description</mat-label>
+      <textarea formControlName="description" class="input" matInput placeholder="description..." value=""></textarea>
+    </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button matButton mat-dialog-close>Close</button>

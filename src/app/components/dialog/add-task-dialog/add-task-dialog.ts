@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { createTaskForm, updateTaskForm } from '../../auth-forms/task/task.form';
 import { Task } from '../../../services/task/task';
+import { Client } from '../../../services/client/client';
 
 @Component({
   selector: 'app-add-task-dialog',
@@ -26,9 +27,12 @@ import { Task } from '../../../services/task/task';
   styleUrl: './add-task-dialog.scss',
   providers: [provideNativeDateAdapter()]
 })
-export class AddTaskDialog {
+export class AddTaskDialog implements OnInit, OnDestroy {
   taskForm: FormGroup
-  constructor(private _taskServices: Task, private dialogRef: MatDialogRef<AddTaskDialog>, private _snackBar: MatSnackBar, private _userService: User, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder) {
+  client: any[] = []
+  private destroy$ = new Subject<void>();
+
+  constructor(private _clientService: Client, private _taskServices: Task, private dialogRef: MatDialogRef<AddTaskDialog>, private _snackBar: MatSnackBar, private _userService: User, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder) {
     this.taskForm = createTaskForm(this.fb)
   }
 
@@ -38,6 +42,17 @@ export class AddTaskDialog {
 
    onCancel(): void {
     this.dialogRef.close(false)
+  }
+
+  ngOnInit(): void {
+    this._clientService.getExistingClient().pipe(takeUntil(this.destroy$)).subscribe((response) => {
+      this.client = response
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 
    onSubmit(): void {

@@ -27,6 +27,7 @@ import { AddClientDialog } from '../dialog/add-client-dialog/add-client-dialog';
 import { EditClientDialog } from '../dialog/edit-client-dialog/edit-client-dialog';
 import { Client } from '../../services/client/client';
 import { ViewClientDialog } from '../dialog/view/view-client-dialog/view-client-dialog';
+import { AdvancedFilterClientDialog } from '../dialog/add-client-dialog/advanced-filter-client-dialog/advanced-filter-client-dialog';
 
 export interface Clients {
   serialNo: number;
@@ -52,11 +53,22 @@ export class ExistingClient implements AfterViewInit, OnDestroy, OnInit {
     displayedColumns: string[] = ['serialNo', 'name', 'email', 'description', 'start_time', 'end_time', 'status', 'is_deleted', 'action'];
     existClient: any = new MatTableDataSource([]);
     existCount: any
+    searchQuery: any = ""
+    description: any = ""
+    status: any = ""
+    page: number = 1;
+    limit: number = 10;
+    sortField: string = 'name'; 
+    sortOrder: string = 'asc';   
+    searchInputControl: UntypedFormControl = new UntypedFormControl()
+
     private destroy$ = new Subject<void>();
 
     constructor(private _clientService: Client, private _taskServies: Task, private _matdialog: MatDialog, private _snackBar: MatSnackBar, private cdr: ChangeDetectorRef, private _empServices: Employee, private _router: Router, private _activeRoute: ActivatedRoute) {}
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
+    @ViewChild(MatSort) sort!: MatSort;
+
 
     ngAfterViewInit(): void {
       this.existClient.paginator = this.paginator;
@@ -64,12 +76,39 @@ export class ExistingClient implements AfterViewInit, OnDestroy, OnInit {
 
     ngOnInit(): void {
       this.getClientCount()
+      this.onSearch()
+    }
+
+     onSearch(): void {
+      this.searchInputControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        map(value => value?.trim().toLowerCase())
+      ).subscribe(value => {
+        this.searchQuery = value
+        this.getClientCount()
+        this.cdr.detectChanges()
+       })
+    }
+
+    onPageChange(event: PageEvent): void {
+      this.page = event.pageIndex + 1;
+      this.limit = event.pageSize;
+      this.getClientCount();
+    }
+
+    onSortChange(sort: Sort): void {
+      this.sortField = sort.active;
+      this.sortOrder = sort.direction || 'asc';
+      this.getClientCount();
     }
 
     getClientCount(): void {
+      const sort = `${this.sortField}:${this.sortOrder}`
       forkJoin([
-        this._clientService.getExistingClient().pipe(retry(3), catchError(err => of(null))),
-        this._clientService.countExistingClient().pipe(retry(3), catchError(err => of(null)))
+        this._clientService.getExistingClient(this.searchQuery, this.page, this.limit, sort).pipe(retry(3), catchError(err => of(null))),
+        this._clientService.countExistingClient(this.searchQuery).pipe(retry(3), catchError(err => of(null)))
       ]).pipe(takeUntil(this.destroy$)).subscribe(([
         existingClient,
         countExisting
@@ -126,6 +165,46 @@ export class ExistingClient implements AfterViewInit, OnDestroy, OnInit {
       dialogRef.afterClosed().subscribe((result) => {
 
       })
+    }
+
+      onAdvancedClientFilterDialog(): void {
+         const dialogRef = this._matdialog.open(AdvancedFilterClientDialog, {
+          width: '400px',
+       
+        })
+    
+        dialogRef.afterClosed().subscribe((filters: any) => {
+          if (filters) {
+            const { description } = filters;
+      
+              this._clientService.getExistingClient('', 1, 10, 'name:asc', description)
+                .subscribe((response) => {
+                  this.existClient = response; 
+                  this.cdr.detectChanges()
+              });
+      
+              this._clientService.countExistingClient('', description).subscribe((response) => {
+                this.existCount = response.count; 
+                this.cdr.detectChanges()
+      
+              })
+          } else {
+            this.resetFilters()
+          }
+        })
+      }
+
+    resetFilters(): void {
+        this._clientService.getExistingClient('', 1, 10, 'name:asc', '')
+        .subscribe((response) => {
+          this.existClient = response;
+          this.cdr.detectChanges();
+        });
+
+      this._clientService.countExistingClient('', '').subscribe((response) => {
+        this.existCount = response.count;
+        this.cdr.detectChanges();
+      });
     }
 
     onDelete(id: string): void {

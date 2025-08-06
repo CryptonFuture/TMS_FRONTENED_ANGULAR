@@ -11,10 +11,11 @@ import { Router, RouterModule } from '@angular/router'
 import { User } from '../../services/auth/user';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TabsClient } from '../../components/tabs-client/tabs-client';
+import { Logout } from '../../components/logout/logout';
 
 @Component({
   selector: 'app-client',
-  imports: [TabsClient, RouterModule, Footer, MatGridListModule, MatCardModule, MatSidenavModule, CommonModule, MatIconModule, MatMenuModule, MatButtonModule],
+  imports: [Logout, TabsClient, RouterModule, Footer, MatGridListModule, MatCardModule, MatSidenavModule, CommonModule, MatIconModule, MatMenuModule, MatButtonModule],
   templateUrl: './client.html',
   styleUrl: './client.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

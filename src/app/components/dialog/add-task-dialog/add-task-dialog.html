@@ -16,11 +16,15 @@
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Client Id</mat-label>
-        <mat-select formControlName="client_id">
-          <mat-option>a</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <mat-label>Client Name</mat-label>
+      <mat-select formControlName="client_id">
+        <mat-option *ngFor="let cli of client" [value]="cli._id">{{cli.name}}</mat-option>
+        <mat-option *ngIf="client.length === 0" disabled>
+          No record found
+        </mat-option>
+      </mat-select>
+       
+    </mat-form-field>
 
     </div>
     <mat-form-field class="example-full-width">
