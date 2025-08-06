@@ -9,10 +9,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { Router, RouterModule } from '@angular/router'
 import { TabsProject } from '../../components/tabs-project/tabs-project';
+import { Logout } from '../../components/logout/logout';
 
 @Component({
   selector: 'app-project',
-  imports: [TabsProject, RouterModule, Footer, MatGridListModule, MatCardModule, MatSidenavModule, CommonModule, MatIconModule, MatMenuModule, MatButtonModule],
+  imports: [Logout, TabsProject, RouterModule, Footer, MatGridListModule, MatCardModule, MatSidenavModule, CommonModule, MatIconModule, MatMenuModule, MatButtonModule],
   templateUrl: './project.html',
   styleUrl: './project.scss'
 })

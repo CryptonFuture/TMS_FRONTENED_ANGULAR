@@ -191,7 +191,7 @@ export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
 
     onAssignEmpToClient(): void {
       const dialogRef = this._matdialog.open(AssignEmpToClient, {
-        width: '400px'
+        width: '1000px'
       })
 
       dialogRef.afterClosed().subscribe((result) => {

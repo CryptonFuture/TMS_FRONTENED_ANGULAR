@@ -10,6 +10,7 @@ import { employeeGuard } from './guard/employee/employee-guard';
 import { Task } from './pages/task/task';
 import { Project } from './pages/project/project';
 import { Client } from './pages/client/client';
+import { EmployeeAllocation } from './pages/employee-allocation/employee-allocation';
 
 export const routes: Routes = [
     {
@@ -103,6 +104,21 @@ export const routes: Routes = [
             },
 
             
+        ]
+    },
+
+     // EMPLOYEE ALLOCATION
+
+    {
+        path: '',
+        component: EmployeeAllocation,
+        children: [
+            {
+                path: 'employee-allocation',
+                loadChildren: () =>
+                    import('./pages/employee-allocation/employee-allocation.routes').then((m) => m.employeeAllocationRoutes)
+            },
+
         ]
     },
 ];

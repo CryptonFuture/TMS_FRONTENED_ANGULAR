@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog'
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon'
@@ -9,18 +9,27 @@ import { AssignEmpToClientService } from '../../../services/assignEmpToClient/as
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { createAssignEmpToClientForm } from '../../auth-forms/assign-emp-to-client/assign-emp-to-client.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatFormFieldModule, MatFormField } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { Project } from '../../../services/project/project';
+import { Client } from '../../../services/client/client';
+import { catchError, forkJoin, of, retry, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-assign-emp-to-client',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, MatButtonModule, MatSelectModule, MatDialogModule, MatIconModule],
+  imports: [MatInputModule, MatFormFieldModule, MatFormField, FormsModule, ReactiveFormsModule, CommonModule, MatButtonModule, MatSelectModule, MatDialogModule, MatIconModule],
   templateUrl: './assign-emp-to-client.html',
   styleUrl: './assign-emp-to-client.scss'
 })
-export class AssignEmpToClient implements OnInit {
+export class AssignEmpToClient implements OnInit, OnDestroy {
   assignEmp: any[] = []
+  project: any[] = []
+  existingClient: any[] = []
   assignEmpToClientForm: FormGroup
-
-  constructor(private cdr: ChangeDetectorRef, private _snackBar: MatSnackBar, private _assignEmpToClientService: AssignEmpToClientService, private fb: FormBuilder, private _empServices: Employee, private dialogRef: MatDialogRef<AssignEmpToClient>) {
+  
+  private destroy$ = new Subject<void>();
+  
+  constructor(private _clientService: Client, private _projService: Project, private cdr: ChangeDetectorRef, private _snackBar: MatSnackBar, private _assignEmpToClientService: AssignEmpToClientService, private fb: FormBuilder, private _empServices: Employee, private dialogRef: MatDialogRef<AssignEmpToClient>) {
     this.assignEmpToClientForm = createAssignEmpToClientForm(this.fb)
   }
 
@@ -34,11 +43,32 @@ export class AssignEmpToClient implements OnInit {
   }
 
   ngOnInit(): void {
-    this._empServices.getActiveEmp().subscribe((response) => {
-      this.assignEmp = response
-        console.log(this.assignEmp, 'this.assignEmp');
-        this.cdr.detectChanges()
+    this.getEmpProj()
+  }
+
+  getEmpProj(): void {
+    forkJoin([
+      this._empServices.getActiveEmp().pipe(retry(3), catchError(err => of(null))),
+      this._projService.getActiveProject().pipe(retry(3), catchError(err => of(null))),
+      this._clientService.getExistingClient().pipe(retry(3), catchError(err => of(null)))
+    ]).pipe(takeUntil(this.destroy$)).subscribe(([
+      assignEmployee,
+      proj,
+      client
+    ]) => {
+      this.assignEmp = assignEmployee
+      this.project = proj
+      this.existingClient = client
+
+      console.log(this.project, 'proj');
+      
+      this.cdr.detectChanges()
     })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 
   onSubmit(): void {

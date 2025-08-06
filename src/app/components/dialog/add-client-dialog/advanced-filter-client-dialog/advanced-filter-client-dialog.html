@@ -1,6 +1,6 @@
-  <form [formGroup]="taskAdvancedForm">
+  <form [formGroup]="clientAdvancedForm">
   <h2 mat-dialog-title class="dialog-title">
-    Advance Filter Task
+    Advance Filter Client
     <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
       <mat-icon>close</mat-icon>
     </button>
@@ -15,13 +15,11 @@
         </mat-select>
     </mat-form-field>
 
-     <mat-form-field>
-      <mat-label>Date</mat-label>
-      <input formControlName="date" matInput [matDatepicker]="datepicker">
-      <mat-datepicker #datepicker />
-      <mat-datepicker-toggle [for]="datepicker" matSuffix />
-     
+    <mat-form-field class="example-full-width">
+      <mat-label>Description</mat-label>
+      <textarea formControlName="description" matInput placeholder="Ex. It makes me feel..."></textarea>
     </mat-form-field>
+
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button matButton mat-dialog-close>Cancel</button>

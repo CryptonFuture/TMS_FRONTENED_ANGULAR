@@ -24,8 +24,23 @@ export class Client {
 
     constructor(private _httpclient: HttpClient) {}
 
-    getClient(): Observable<any> {
-      return this._httpclient.get(`${environment.baseUrl}/api/v1/getClient`).pipe(
+    getClient(search: any = "", page: any = 1, limit: any = 10, sort: any = 'name:asc', description: any = ""): Observable<any> {
+      let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+      if(description) {
+        params = params.set('description', description)
+      }
+
+       params = params
+        .set('page', page.toString())
+        .set('limit', limit.toString())
+        .set('sort', sort)
+
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/getClient`, {params}).pipe(
           switchMap(response => {
             const Client = (response as any).data ?? []
             return of(Client)
@@ -42,8 +57,23 @@ export class Client {
         )
     }
 
-    getExistingClient(): Observable<any> {
-      return this._httpclient.get(`${environment.baseUrl}/api/v1/getExistingClient`).pipe(
+    getExistingClient(search: any = "", page: any = 1, limit: any = 10, sort: any = 'name:asc', description: any = ""): Observable<any> {
+       let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+      if(description) {
+        params = params.set('description', description)
+      }
+
+       params = params
+        .set('page', page.toString())
+        .set('limit', limit.toString())
+        .set('sort', sort)
+
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/getExistingClient`, {params}).pipe(
           switchMap(response => {
             const ExistingClient = (response as any).data ?? []
             return of(ExistingClient)
@@ -60,8 +90,23 @@ export class Client {
         )
     }
 
-    getNonExistingClient(): Observable<any> {
-      return this._httpclient.get(`${environment.baseUrl}/api/v1/getNonExistingClient`).pipe(
+    getNonExistingClient(search: any = "", page: any = 1, limit: any = 10, sort: any = 'name:asc', description: any = ""): Observable<any> {
+       let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+      if(description) {
+        params = params.set('description', description)
+      }
+
+       params = params
+        .set('page', page.toString())
+        .set('limit', limit.toString())
+        .set('sort', sort)
+
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/getNonExistingClient`, {params}).pipe(
           switchMap(response => {
             const NonExistingClient = (response as any).data ?? []
             return of(NonExistingClient)
@@ -148,16 +193,43 @@ export class Client {
       return this._httpclient.put(`${environment.baseUrl}/api/v1/deleteClients/${id}`, null) 
     }
 
-    countClient(): Observable<any> {
-      return this._httpclient.get(`${environment.baseUrl}/api/v1/clientCount`)
+    countClient(search: string = "", description: any = ""): Observable<any> {
+      let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+      if(description) {
+        params = params.set('description', description)
+      }
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/clientCount`, {params})
     }
 
-    countExistingClient(): Observable<any> {
-      return this._httpclient.get(`${environment.baseUrl}/api/v1/existingClientCount`)
+    countExistingClient(search: string = "", description: any = ""): Observable<any> {
+       let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+      if(description) {
+        params = params.set('description', description)
+      }
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/existingClientCount`, {params})
     }
 
-    countNonExistingClient(): Observable<any> {
-      return this._httpclient.get(`${environment.baseUrl}/api/v1/NonExistingClientCount`)
+    countNonExistingClient(search: string = "", description: any = ""): Observable<any> {
+       let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+      if(description) {
+        params = params.set('description', description)
+      }
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/NonExistingClientCount`, {params})
     }
 
 

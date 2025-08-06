@@ -20,6 +20,13 @@ export function createClientForm(fb: FormBuilder): FormGroup {
     }, { validators: passwordMatchValidator })
 }
 
+export function advanceFilterClientForm(fb: FormBuilder): FormGroup {
+    return fb.group({
+        status: [''],
+        description: ['']
+    })
+}
+
 export function updateClientForm(fb: FormBuilder): FormGroup {
     return fb.group({
         name: ['', Validators.required],

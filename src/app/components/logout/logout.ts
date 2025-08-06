@@ -1,40 +1,21 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Footer } from '../../components/footer/footer';
+import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatMenuModule } from '@angular/material/menu';
-import { CommonModule } from '@angular/common'
-import { MatCardModule } from '@angular/material/card';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { Content } from '../../components/content/content';
 import { Router, RouterModule } from '@angular/router'
 import { User } from '../../services/auth/user';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Logout } from '../../components/logout/logout';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
-  selector: 'app-dashboard',
-  imports: [RouterModule, Logout, Footer, Content, MatGridListModule, MatCardModule, MatSidenavModule, CommonModule, MatIconModule, MatMenuModule, MatButtonModule],
-  templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-
+  selector: 'app-logout',
+  imports: [MatButtonModule, MatMenuModule, MatIconModule, MatSnackBarModule],
+  templateUrl: './logout.html',
+  styleUrl: './logout.scss'
 })
-export class Dashboard {
-  isDrawerOpen = true;
-
+export class Logout {
   constructor(private _snackBar: MatSnackBar, private _router: Router, private _userServices: User) {}
 
-  onNavigateDashboard(): void {
-    this._router.navigate(['dashboard'])
-  }
-
-   onNavigateEmployee(): void {
-    this._router.navigate(['employee'])
-  }
-
-  onUserLoggedOut(): void {
+    onUserLoggedOut(): void {
     
     const id: any = localStorage.getItem('id')
 
@@ -70,4 +51,5 @@ export class Dashboard {
       }
     })
   }
+
 }
