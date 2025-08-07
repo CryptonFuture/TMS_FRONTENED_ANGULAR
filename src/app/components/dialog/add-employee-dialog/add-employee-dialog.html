@@ -124,8 +124,8 @@
 
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button matButton mat-dialog-close>Cancel</button>
-    <button (click)="onSubmit()" [disabled]="employeeForm.disabled" matButton="filled" cdkFocusInitial>
+    <button class="color-btn" matButton mat-dialog-close>Cancel</button>
+    <button class="btn" (click)="onSubmit()" [disabled]="employeeForm.disabled" matButton="filled" cdkFocusInitial>
       @if(!employeeForm.disabled) {
       <span>Add</span>
       }

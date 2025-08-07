@@ -9,19 +9,6 @@ example-form {
  
 }
 
-.color-btn {
-  color: #3f51b5;
-}
-
-.color-btn:hover {
-  background-color: lightblue !important;
-  color: black !important;
-}
-
-.btn {
-  color: white;
-  background: #3f51b5;
-}
 
 .form-grid {
   display: grid;
@@ -40,6 +27,20 @@ mat-form-field {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.color-btn {
+  color: #3f51b5;
+}
+
+.color-btn:hover {
+  background-color: lightblue !important;
+  color: black !important;
+}
+
+.btn {
+  color: white;
+  background: #3f51b5;
 }
 
 .close-button {

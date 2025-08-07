@@ -73,8 +73,8 @@
 
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button matButton mat-dialog-close>Cancel</button>
-    <button  [disabled]="editClientForm.disabled" (click)="onSubmit()" matButton="filled" cdkFocusInitial>
+    <button class="color-btn" matButton mat-dialog-close>Cancel</button>
+    <button class="btn" [disabled]="editClientForm.disabled" (click)="onSubmit()" matButton="filled" cdkFocusInitial>
        @if(!editClientForm.disabled) {
       <span>Update</span>
       }

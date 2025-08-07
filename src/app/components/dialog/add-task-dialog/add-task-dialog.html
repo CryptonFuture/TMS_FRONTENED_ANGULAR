@@ -19,7 +19,7 @@
       <mat-label>Client Name</mat-label>
       <mat-select formControlName="client_id">
         <mat-option *ngFor="let cli of client" [value]="cli._id">{{cli.name}}</mat-option>
-        <mat-option *ngIf="client.length === 0" disabled>
+        <mat-option *ngIf="client && client.length === 0" disabled>
           No record found
         </mat-option>
       </mat-select>
@@ -33,8 +33,8 @@
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button matButton mat-dialog-close>Cancel</button>
-    <button [disabled]="taskForm.disabled" (click)="onSubmit()" matButton="filled" cdkFocusInitial>
+    <button class="color-btn" matButton mat-dialog-close>Cancel</button>
+    <button class="btn" [disabled]="taskForm.disabled" (click)="onSubmit()" matButton="filled" cdkFocusInitial>
       @if(!taskForm.disabled) {
       <span>Add</span>
       }
