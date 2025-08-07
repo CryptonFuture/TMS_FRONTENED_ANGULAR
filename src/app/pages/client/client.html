@@ -43,6 +43,11 @@
 
         <button mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
+          <span *ngIf="isDrawerOpen">Engagement Report</span>
+        </button>
+
+        <button mat-button class="drawer-item">
+          <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Employee Assignment</span>
         </button>
 
