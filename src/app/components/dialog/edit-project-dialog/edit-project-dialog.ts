@@ -56,7 +56,7 @@ export class EditProjectDialog implements OnInit, OnDestroy {
           joc: response.data.joc,
           designName: response.data.designName,
           project_manager_id: response.data.project_manager_id?._id,
-          client_id: response.data.client_id,
+          client_id: response.data.client_id?._id,
           manager_id: response.data.manager_id?._id,
           start_date: response.data.start_date,
           end_date: response.data.end_date,

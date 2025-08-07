@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
 import { createTaskForm, updateTaskForm } from '../../auth-forms/task/task.form';
 import { Task } from '../../../services/task/task';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Client } from '../../../services/client/client';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -30,9 +31,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class EditTaskDialog implements OnInit, OnDestroy {
 
   editTaskForm: FormGroup
+   client: any[] = []
   private destroy$ = new Subject<void>();
 
-  constructor(private _taskServices: Task, private dialogRef: MatDialogRef<EditTaskDialog>, private _snackBar: MatSnackBar, private _userService: User, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: {data: any}) {
+  constructor(private _clientService: Client,private _taskServices: Task, private dialogRef: MatDialogRef<EditTaskDialog>, private _snackBar: MatSnackBar, private _userService: User, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: {data: any}) {
     this.editTaskForm = updateTaskForm(this.fb)
     
   }
@@ -93,12 +95,23 @@ export class EditTaskDialog implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+      this._clientService.getExistingClient().pipe(takeUntil(this.destroy$)).subscribe((response) => {
+      this.client = response
+      console.log(this.client, 'res');
+      this.cdr.detectChanges()
+
+    })
       this._taskServices.editTaskById(this.data.data).pipe(takeUntil(this.destroy$)).subscribe(response => {
         this.editTaskForm.patchValue({
           name: response.data.name,
+          client_id: response.data.client_id?._id,
           description: response.data.description,
           status: response.data.status
+          
         })
+        console.log(response, 'res');
+        
+       
       })
     }
 

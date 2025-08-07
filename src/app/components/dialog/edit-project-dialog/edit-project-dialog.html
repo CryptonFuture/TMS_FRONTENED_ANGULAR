@@ -44,7 +44,7 @@
         <mat-label>Designation</mat-label>
         <mat-select formControlName="designName">
           <mat-option *ngFor="let design of des" [value]="design.designName">{{design.designName}}</mat-option>
-          <mat-option *ngIf="des.length === 0" disabled>
+          <mat-option *ngIf="des && des.length === 0" disabled>
             No record found
           </mat-option>
         </mat-select>
@@ -57,7 +57,7 @@
         <mat-label>Project manager Id</mat-label>
         <mat-select formControlName="project_manager_id">
         <mat-option *ngFor="let activeEmp of activeEmployee" [value]="activeEmp._id">{{activeEmp.name}}</mat-option>
-          <mat-option *ngIf="activeEmployee.length === 0" disabled>
+          <mat-option *ngIf="activeEmployee && activeEmployee.length === 0" disabled>
               No record found
           </mat-option>
         </mat-select>
@@ -76,7 +76,7 @@
         <mat-label>Manager Id</mat-label>
         <mat-select formControlName="manager_id">
           <mat-option *ngFor="let activeEmp of activeEmployee" [value]="activeEmp._id">{{activeEmp.name}}</mat-option>
-           <mat-option *ngIf="activeEmployee.length === 0" disabled>
+           <mat-option *ngIf=" activeEmployee && activeEmployee.length === 0" disabled>
               No record found
           </mat-option>
         </mat-select>

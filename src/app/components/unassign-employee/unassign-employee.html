@@ -5,7 +5,7 @@
 
     <div>
         <button class="mar-btn" matButton="filled" >
-            unassign employee count: 0
+            unassign employee count: {{unAssignEmpToClientCount}}
         </button>
         <!-- <button class="mar-btn" matButton="filled" (click)="onAdvancedClientFilterDialog()">
             advanced filter
@@ -18,50 +18,55 @@
 </div>
 <div class="example-small-box mat-elevation-z4">
     <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="unAssignEmp">
+        <table mat-table [dataSource]="unAssignEmpToClient">
 
             <!-- Position Column -->
             <ng-container matColumnDef="serialNo">
                 <th mat-header-cell *matHeaderCellDef> Sno. </th>
-                <td mat-cell *matCellDef="let element; let i = index"> 1 </td>
+                <td mat-cell *matCellDef="let element; let i = index"> {{i + 1}} </td>
             </ng-container>
 
             <!-- Name Column -->
             <ng-container matColumnDef="emp_name">
                 <th mat-header-cell *matHeaderCellDef> Emp Name </th>
-                <td mat-cell *matCellDef="let element"> a </td>
+                <td mat-cell *matCellDef="let element"> ---------- </td>
             </ng-container>
 
             <!-- Weight Column -->
-            <ng-container matColumnDef="proj_name">
-                <th mat-header-cell *matHeaderCellDef > Project Name </th>
-                <td mat-cell *matCellDef="let element"> a </td>
-            </ng-container>
 
-             <ng-container matColumnDef="client_name">
-                <th mat-header-cell *matHeaderCellDef > Client Name </th>
-                <td mat-cell *matCellDef="let element"> a </td>
-            </ng-container>
+                <ng-container matColumnDef="proj_name">
+                    <th mat-header-cell *matHeaderCellDef > Project Name </th>
+                    <td mat-cell *matCellDef="let element"> ---------- </td>
+                </ng-container>
+
+                <ng-container matColumnDef="client_name">
+                    <th mat-header-cell *matHeaderCellDef > Client Name </th>
+                    <td mat-cell *matCellDef="let element"> {{element.name}}</td>
+                </ng-container>
+        
 
             <!-- Symbol Column -->
             <ng-container matColumnDef="description">
                 <th mat-header-cell *matHeaderCellDef > Description </th>
-                <td mat-cell *matCellDef="let element"> a</td>
+                <td mat-cell *matCellDef="let element"> {{element.description}}</td>
             </ng-container>
 
 
              <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef> Status </th>
                 <td mat-cell *matCellDef="let element">
-                     <mat-chip class="custom-chip">active</mat-chip>
+                     <mat-chip class="custom-chip">{{element.assignStatus ? '': 'unAssign'}}</mat-chip>
                 </td>
             </ng-container>
 
              <ng-container matColumnDef="is_deleted">
                 <th mat-header-cell *matHeaderCellDef> Is Deleted </th>
                 <td mat-cell *matCellDef="let element"> 
-                    <button  class="btn" matButton="elevated">
-                         is deleted
+                    <button [ngStyle]="{
+                        'background-color': element.is_deleted ? '#d3d3d3' : '',
+                        'color': element.is_deleted ? '#000000' : ''
+                    }" [disabled]="element.is_deleted" (click)="toggleDeleted(element._id)" class="btn" matButton="elevated">
+                          {{element.is_deleted ? 'IsDeleted' : 'IsNotDeleted'}}
                     </button>
                 </td>
             </ng-container>
@@ -77,11 +82,11 @@
                             <mat-icon>visibility</mat-icon>
                             <span>View</span>
                         </button>
-                        <button mat-menu-item>
+                        <button mat-menu-item (click)="onEditAssignEmpToClient(element._id)">
                             <mat-icon>edit</mat-icon>
                             <span>Edit</span>
                         </button>
-                        <button mat-menu-item>
+                        <button mat-menu-item (click)="onDelete(element._id)">
                             <mat-icon>delete</mat-icon>
                             <span>Delete</span>
                         </button>

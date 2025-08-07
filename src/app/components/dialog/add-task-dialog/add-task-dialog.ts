@@ -47,7 +47,12 @@ export class AddTaskDialog implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._clientService.getExistingClient().pipe(takeUntil(this.destroy$)).subscribe((response) => {
       this.client = response
+      console.log(this.client, 'res');
+      this.cdr.detectChanges()
     })
+
+   
+    
   }
 
   ngOnDestroy(): void {

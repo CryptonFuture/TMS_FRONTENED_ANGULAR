@@ -1,12 +1,12 @@
-<form class="example-form" [formGroup]="assignEmpToClientForm">
+<form class="example-form" [formGroup]="editAssignEmpToClientForm">
   <h2 mat-dialog-title class="dialog-title">
-    Assign Employee To Client
+    Edit Assign Employee To Client
     <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
       <mat-icon>close</mat-icon>
     </button>
   </h2>
   <mat-dialog-content class="mat-typography">
-    <div class="form-grid">
+     <div class="form-grid">
     <mat-form-field>
       <mat-label>Employee Name</mat-label>
       <mat-select formControlName="emp_id">
@@ -15,7 +15,7 @@
           No record found
         </mat-option>
       </mat-select>
-       <mat-error *ngIf="assignEmpToClientForm.get('emp_id')?.hasError('required')">
+       <mat-error *ngIf="editAssignEmpToClientForm.get('emp_id')?.hasError('required')">
           Employee Id is required
       </mat-error>
     </mat-form-field>
@@ -45,17 +45,18 @@
       <mat-label>Description</mat-label>
       <textarea formControlName="description" class="input" matInput placeholder="description..." value=""></textarea>
     </mat-form-field>
+    <mat-checkbox formControlName="status">Status</mat-checkbox>
+
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button class="color-btn" matButton mat-dialog-close>Close</button>
-    <button class="btn" [disabled]="assignEmpToClientForm.disabled" (click)="onSubmit()" matButton="filled" cdkFocusInitial>
-      @if(!assignEmpToClientForm.disabled) {
-          <span>Add</span>
+    <button class="btn" matButton="filled" [disabled]="editAssignEmpToClientForm.disabled" cdkFocusInitial (click)="onSubmit()">
+       @if(!editAssignEmpToClientForm.disabled) {
+          <span>Update</span>
         }
-      @if (assignEmpToClientForm.disabled) {
-          <span>Add</span>
+      @if (editAssignEmpToClientForm.disabled) {
+          <span>Update</span>
         }
-      
     </button>
   </mat-dialog-actions>
 </form>

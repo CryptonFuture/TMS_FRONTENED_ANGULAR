@@ -7,17 +7,55 @@ import { environment } from '../../environments/environments';
   providedIn: 'root'
 })
 export class EmpAlloc {
+    private _getAssignToClientEmp = new BehaviorSubject<any[]>([])
     private _getAssignEmp = new BehaviorSubject<any[]>([])
     private _getUnAssignEmp = new BehaviorSubject<any[]>([])
     private _editAllocEmpById = new BehaviorSubject<any[]>([])
     private _viewAllocEmpById = new BehaviorSubject<any>({})
 
+    AssignToClientEmp: Observable<any[]> = this._getAssignToClientEmp.asObservable()
     AssignEmp: Observable<any[]> = this._getAssignEmp.asObservable()
     UnAssignEmp: Observable<any[]> = this._getUnAssignEmp.asObservable()
     allocEditById: Observable<any[]> = this._editAllocEmpById.asObservable()
     allocViewById: Observable<any> = this._viewAllocEmpById.asObservable()
 
     constructor(private _httpclient: HttpClient) {}
+
+    getAssignToClientEmp(): Observable<any> {
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/getAssignToClientEmp`).pipe(
+          switchMap(response => {
+            const AssignToClientEmp = (response as any).data ?? []
+            return of(AssignToClientEmp)
+          }),
+          tap(assignToClientEmp => {
+            this._getAssignToClientEmp.next(assignToClientEmp)
+          }),
+          catchError((error) => {
+            console.error('Error fetching Assign Emp To Client', error);
+            return throwError(
+              () => new Error('Error fetching Assign Emp To Client')
+            );
+          })
+        )
+    }
+
+    getUnAssignToClientEmp(): Observable<any> {
+      return this._httpclient.get(`${environment.baseUrl}/api/v1/getUnAssignToClientEmp`).pipe(
+          switchMap(response => {
+            const UnAssignToClientEmp = (response as any).data ?? []
+            return of(UnAssignToClientEmp)
+          }),
+          tap(unAssignToClientEmp => {
+            this._getAssignToClientEmp.next(unAssignToClientEmp)
+          }),
+          catchError((error) => {
+            console.error('Error fetching UnAssign Emp To Client', error);
+            return throwError(
+              () => new Error('Error fetching UnAssign Emp To Client')
+            );
+          })
+        )
+    }
 
     getAssignEmp(): Observable<any> {
       return this._httpclient.get(`${environment.baseUrl}/api/v1/getAssignEmp`).pipe(
@@ -111,7 +149,15 @@ export class EmpAlloc {
       )
     }
 
-     assignAllocEmpCount(): Observable<any> {
+    assignEmpToClientCount(): Observable<any> {
+       return this._httpclient.get(`${environment.baseUrl}/api/v1/assignEmpToClientCount`)
+    }
+
+    unAssignEmpToClientCount(): Observable<any> {
+       return this._httpclient.get(`${environment.baseUrl}/api/v1/unAssignEmpToClientCount`)
+    }
+
+    assignAllocEmpCount(): Observable<any> {
        return this._httpclient.get(`${environment.baseUrl}/api/v1/assignEmpCount`)
     }
 
