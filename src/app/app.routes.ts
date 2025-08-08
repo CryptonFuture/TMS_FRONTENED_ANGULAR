@@ -11,6 +11,8 @@ import { Task } from './pages/task/task';
 import { Project } from './pages/project/project';
 import { Client } from './pages/client/client';
 import { EmployeeAllocation } from './pages/employee-allocation/employee-allocation';
+import { EmployeeAssignment } from './pages/employee-assignment/employee-assignment';
+import { TaskAssignment } from './pages/task-assignment/task-assignment';
 
 export const routes: Routes = [
     {
@@ -117,6 +119,36 @@ export const routes: Routes = [
                 path: 'employee-allocation',
                 loadChildren: () =>
                     import('./pages/employee-allocation/employee-allocation.routes').then((m) => m.employeeAllocationRoutes)
+            },
+
+        ]
+    },
+
+    // EMPLOYEE ASSIGNMENT
+
+    {
+        path: '',
+        component: EmployeeAssignment,
+        children: [
+            {
+                path: 'employee-assignment',
+                loadChildren: () =>
+                    import('./pages/employee-assignment/employee-assignment.routes').then((m) => m.employeeAssignmentRoutes)
+            },
+
+        ]
+    },
+
+     // TASK ASSIGNMENT
+
+    {
+        path: '',
+        component: TaskAssignment,
+        children: [
+            {
+                path: 'task-assignment',
+                loadChildren: () =>
+                    import('./pages/task-assignment/task-assignment.routes').then((m) => m.taskAssignmentRoutes)
             },
 
         ]

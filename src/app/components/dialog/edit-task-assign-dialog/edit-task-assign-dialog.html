@@ -1,0 +1,118 @@
+<form class="example-form" [formGroup]="ediTaskAssignFormForm">
+  <h2 mat-dialog-title class="dialog-title">
+    Edit Task Assignment
+    <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+  <mat-dialog-content class="mat-typography">
+    <div class="form-grid">
+        <mat-form-field>
+            <mat-label>User Id</mat-label>
+            <mat-select formControlName="user_id">
+                <mat-option *ngFor="let activeEmployee of activeEmp" [value]="activeEmployee._id">{{activeEmployee.name}}</mat-option>
+                <mat-option *ngIf="activeEmp && activeEmp.length === 0" disabled>
+                    No record found
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="ediTaskAssignFormForm.get('user_id')?.hasError('required')">
+                User Name is required
+            </mat-error>
+        </mat-form-field>
+
+         <mat-form-field>
+            <mat-label>Project Id</mat-label>
+            <mat-select formControlName="project_id">
+                <mat-option *ngFor="let activeProject of activeProj" [value]="activeProject._id">{{activeProject.project_name}}</mat-option>
+                <mat-option *ngIf="activeProj && activeProj.length === 0" disabled>
+                    No record found
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="ediTaskAssignFormForm.get('project_id')?.hasError('required')">
+                Project Name is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Task Id</mat-label>
+            <mat-select formControlName="task_id">
+                <mat-option *ngFor="let tasks of task" [value]="tasks._id">{{tasks.name}}</mat-option>
+                <mat-option *ngIf="task && task.length === 0" disabled>
+                    No record found
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="ediTaskAssignFormForm.get('task_id')?.hasError('required')">
+                Task Name is required
+            </mat-error>
+        </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Plan Hours</mat-label>
+        <input type="number" formControlName="plan_hour" class="input" matInput placeholder="name..." value="">
+        <mat-error *ngIf="ediTaskAssignFormForm.get('plan_hour')?.hasError('required')">
+            Plan hours is required
+        </mat-error>
+
+        <mat-error *ngIf="ediTaskAssignFormForm.get('plan_hour')?.hasError('max')">
+            Plan hours must not exceed 5
+        </mat-error>
+
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Working Hours</mat-label>
+        <input  type="number" formControlName="working_hours" class="input" matInput placeholder="name..." value="">
+        <mat-error *ngIf="ediTaskAssignFormForm.get('working_hours')?.hasError('required')">
+            Working hours is required
+        </mat-error>
+
+        <mat-error *ngIf="ediTaskAssignFormForm.get('working_hours')?.hasError('max') ">
+            Working hours must not exceed 8
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Plan Start date</mat-label>
+      <input matInput [matDatepicker]="datepicker" formControlName="plan_start_date">
+      <mat-datepicker #datepicker />
+      <mat-datepicker-toggle [for]="datepicker" matSuffix />
+    </mat-form-field>
+
+    
+    <mat-form-field>
+      <mat-label>Plan End date</mat-label>
+      <input matInput [matDatepicker]="datepicker1" formControlName="plan_end_date">
+      <mat-datepicker #datepicker1 />
+      <mat-datepicker-toggle [for]="datepicker1" matSuffix />
+    </mat-form-field>
+
+     <mat-form-field>
+      <mat-label>Start date</mat-label>
+      <input matInput [matDatepicker]="datepicker2" formControlName="start_date">
+      <mat-datepicker #datepicker2 />
+      <mat-datepicker-toggle [for]="datepicker2" matSuffix />
+    </mat-form-field>
+    </div>
+    <mat-form-field class="example-full-width">
+      <mat-label>End date</mat-label>
+      <input matInput [matDatepicker]="datepicker3" formControlName="end_date">
+      <mat-datepicker #datepicker3 />
+      <mat-datepicker-toggle [for]="datepicker3" matSuffix />
+    </mat-form-field>
+     <mat-form-field class="example-full-width">
+      <mat-label>Description</mat-label>
+      <textarea formControlName="description" class="input" matInput placeholder="description..." value=""></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button class="color-btn" matButton mat-dialog-close>Cancel</button>
+    <button [disabled]="ediTaskAssignFormForm.disabled" (click)="onSubmit()" class="btn"  matButton="filled" cdkFocusInitial>
+      @if(!ediTaskAssignFormForm.disabled) {
+      <span>Update</span>
+      }
+      @if (ediTaskAssignFormForm.disabled) {
+      <span>Update</span>
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -31,7 +31,7 @@ import { Client } from '../../../services/client/client';
 export class EditTaskDialog implements OnInit, OnDestroy {
 
   editTaskForm: FormGroup
-   client: any[] = []
+  client: any[] = []
   private destroy$ = new Subject<void>();
 
   constructor(private _clientService: Client,private _taskServices: Task, private dialogRef: MatDialogRef<EditTaskDialog>, private _snackBar: MatSnackBar, private _userService: User, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: {data: any}) {
