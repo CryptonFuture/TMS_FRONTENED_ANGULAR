@@ -46,12 +46,14 @@
           <span *ngIf="isDrawerOpen">Employee Allocation</span>
         </button>
 
-        <button mat-button class="drawer-item">
+        <button routerLink="/employee-assignment" 
+          routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Employee Assignment</span>
         </button>
 
-        <button mat-button class="drawer-item">
+        <button routerLink="/task-assignment" 
+          routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Task Assignment</span>
         </button>

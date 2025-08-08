@@ -50,9 +50,6 @@ export class AddTaskDialog implements OnInit, OnDestroy {
       console.log(this.client, 'res');
       this.cdr.detectChanges()
     })
-
-   
-    
   }
 
   ngOnDestroy(): void {

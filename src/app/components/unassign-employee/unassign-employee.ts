@@ -53,9 +53,6 @@ export class UnassignEmployee implements OnDestroy, OnInit, AfterViewInit {
     ]) => {
       this.unAssignEmpToClient = unAassignToClientEmployee
       this.unAssignEmpToClientCount = unAssignCountEmployee.count 
-
-
-      
       this.cdr.detectChanges()
     })
   }

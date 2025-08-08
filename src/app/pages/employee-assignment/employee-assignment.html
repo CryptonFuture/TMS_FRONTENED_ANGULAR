@@ -6,14 +6,13 @@
       </div>
 
       <div class="drawer-content">
-        <button 
-          routerLink="/dashboard" 
+        <button   routerLink="/dashboard" 
           routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"  mat-button class="drawer-item">
+          [routerLinkActiveOptions]="{ exact: true }" mat-button class="drawer-item">
           <mat-icon>home</mat-icon>
           <span *ngIf="isDrawerOpen">Dashboard</span>
         </button>
-        <button 
+        <button   
           routerLink="/employee" 
           routerLinkActive="active"
            mat-button class="drawer-item">
@@ -34,9 +33,9 @@
           routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Client</span>
-      </button>
+        </button>
 
-        <button mat-button class="drawer-item">
+          <button mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Engagement Report</span>
         </button>
@@ -47,7 +46,6 @@
           <span *ngIf="isDrawerOpen">Employee Allocation</span>
         </button>
 
-      
         <button routerLink="/employee-assignment" 
           routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
@@ -72,7 +70,7 @@
       </div>
 
       <div class="drawer-footer">
-       
+     
       </div>
     </div>
   </mat-drawer>
@@ -98,14 +96,14 @@
                 <mat-icon>settings</mat-icon>
                 <span>Settings</span>
             </button>
-            <app-logout></app-logout>
+          <app-logout></app-logout>
         </mat-menu>
     </header>
 
     
     <main class="main-content">
-      <h2>Client</h2>
-      <app-tabs-client></app-tabs-client>
+     <h2>Employee Assignment</h2>
+     <app-emp-assign-list></app-emp-assign-list>
     </main>
 
     <app-footer></app-footer>
