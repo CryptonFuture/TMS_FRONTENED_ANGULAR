@@ -1,0 +1,142 @@
+
+table {
+  
+  width: 100%;
+}
+
+.input {
+  margin-top: 10px;
+   width: 100%;
+   max-width: 300px;
+   height: 100%;
+}
+
+.columns {
+  background-color: white;
+}
+
+.paginators {
+  background-color: white;
+}
+
+.example-small-box {
+  height: 400px;
+  overflow: auto;
+}
+
+.d-flexs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn {
+  background: #3f51b5;
+  color: white;
+}
+
+.mar-btn {
+  margin-top: 10px;
+  background: #3f51b5;
+  margin-left: 10px;
+}
+
+.custom-header {
+  color: white;
+  background: #3f51b5;
+}
+
+.json-scroll {
+  max-height: 100px; /* fix height */
+  overflow-y: auto;  /* vertical scroll */
+  overflow-x: auto;  /* horizontal scroll if needed */
+  background: white;
+  color: black;
+  border: 1px solid lightgray;
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.json-scroll pre {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  white-space: pre-wrap; /* wrap long lines */
+  word-break: break-word;
+  
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row {
+  cursor: pointer;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail-wrapper {
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 0fr;
+  grid-template-columns: 100%;
+  transition: grid-template-rows 225ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.example-element-detail-wrapper-expanded {
+  grid-template-rows: 1fr;
+}
+
+.example-element-detail {
+  display: flex;
+  min-height: 0;
+}
+
+.example-element-diagram {
+  min-width: 80px;
+  border: 2px solid black;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: 104px;
+}
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+.example-toggle-button {
+  transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.example-toggle-button-expanded {
+  transform: rotate(180deg);
+}
+

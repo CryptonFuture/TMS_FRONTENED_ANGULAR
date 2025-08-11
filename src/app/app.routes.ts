@@ -13,6 +13,8 @@ import { Client } from './pages/client/client';
 import { EmployeeAllocation } from './pages/employee-allocation/employee-allocation';
 import { EmployeeAssignment } from './pages/employee-assignment/employee-assignment';
 import { TaskAssignment } from './pages/task-assignment/task-assignment';
+import { UserLogs } from './pages/user-logs/user-logs';
+import { EndPoint } from './pages/end-point/end-point';
 
 export const routes: Routes = [
     {
@@ -139,7 +141,7 @@ export const routes: Routes = [
         ]
     },
 
-     // TASK ASSIGNMENT
+    // TASK ASSIGNMENT
 
     {
         path: '',
@@ -149,6 +151,36 @@ export const routes: Routes = [
                 path: 'task-assignment',
                 loadChildren: () =>
                     import('./pages/task-assignment/task-assignment.routes').then((m) => m.taskAssignmentRoutes)
+            },
+
+        ]
+    },
+
+    // USER LOGS
+
+    {
+        path: '',
+        component: UserLogs,
+        children: [
+            {
+                path: 'user-logs',
+                loadChildren: () =>
+                    import('./pages/user-logs/user.logs.routes').then((m) => m.logsRoutes)
+            },
+
+        ]
+    },
+
+     // END POINT
+
+    {
+        path: '',
+        component: EndPoint,
+        children: [
+            {
+                path: 'end-point',
+                loadChildren: () =>
+                    import('./pages/end-point/end.point.routes').then((m) => m.endPointRoutes)
             },
 
         ]
