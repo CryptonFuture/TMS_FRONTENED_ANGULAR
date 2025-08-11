@@ -63,9 +63,16 @@
           <span *ngIf="isDrawerOpen">Role</span>
         </button>
 
-        <button mat-button class="drawer-item">
+        <button routerLink="/user-logs" 
+          routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Logs</span>
+        </button>
+
+        <button routerLink="/end-point" 
+          routerLinkActive="active" mat-button class="drawer-item">
+          <mat-icon>settings</mat-icon>
+          <span *ngIf="isDrawerOpen">End Points</span>
         </button>
       </div>
 

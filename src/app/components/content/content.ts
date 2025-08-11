@@ -6,6 +6,7 @@ import { Employee } from '../../services/employee/employee';
 import { Task } from '../../services/task/task';
 import { Project } from '../../services/project/project';
 import { Client } from '../../services/client/client';
+import { EmpAlloc } from '../../services/emp-alloc/emp-alloc';
 
 @Component({
   selector: 'app-content',
@@ -27,9 +28,11 @@ export class Content implements OnDestroy, OnInit {
   clientCount: any
   clientExistCount: any
   clientNonExistCount: any
+  assignEmployeeCount: any
+  UnAssignEmployeeCount: any
   private destroy$ = new Subject<void>();
 
-  constructor(private _clientService: Client, private _projService: Project, private _taskService: Task, private cdr: ChangeDetectorRef, private _empServices: Employee) {}
+  constructor(private _empAllocService: EmpAlloc, private _clientService: Client, private _projService: Project, private _taskService: Task, private cdr: ChangeDetectorRef, private _empServices: Employee) {}
 
   ngOnInit(): void {
     this.count()
@@ -49,7 +52,10 @@ export class Content implements OnDestroy, OnInit {
       this._projService.RejectedCountProject().pipe(retry(3), catchError(err => of(null))),
       this._clientService.countClient().pipe(retry(3), catchError(err => of(null))),
       this._clientService.countExistingClient().pipe(retry(3), catchError(err => of(null))),
-      this._clientService.countNonExistingClient().pipe(retry(3), catchError(err => of(null)))
+      this._clientService.countNonExistingClient().pipe(retry(3), catchError(err => of(null))),
+      this._empAllocService.assignEmpToClientCount().pipe(retry(3), catchError(err => of(null))),
+      this._empAllocService.unAssignEmpToClientCount().pipe(retry(3), catchError(err => of(null)))
+
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
       allcount,
       activecount,
@@ -63,7 +69,9 @@ export class Content implements OnDestroy, OnInit {
       projRejectedCount,
       clieCount,
       clieExistCount,
-      clieNonExistCount
+      clieNonExistCount,
+      assignEmpCount,
+      UnAssignEmpCount
     ]) => {
       this.countAll = allcount.count
       this.activeCount = activecount.count
@@ -77,7 +85,9 @@ export class Content implements OnDestroy, OnInit {
       this.projectRejectedCount = projRejectedCount.count
       this.clientCount = clieCount.count
       this.clientExistCount = clieExistCount.count
-      this.clientNonExistCount = clieNonExistCount.count
+      this.clientNonExistCount = clieNonExistCount.count,
+      this.assignEmployeeCount = assignEmpCount.count,
+      this.UnAssignEmployeeCount = UnAssignEmpCount.count
       this.cdr.detectChanges()
     })
   }
