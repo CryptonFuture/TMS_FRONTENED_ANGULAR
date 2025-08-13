@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -16,6 +16,8 @@ import { createLoginForm } from '../../../components/auth-forms/sign-in.form';
 import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Role } from '../../../services/role/role';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -24,16 +26,28 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrl: './login.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Login {
+export class Login implements OnInit, OnDestroy {
   isDrawerOpen = true;
   signInForm: FormGroup
-
-  constructor(private _snackBar: MatSnackBar, private fb: FormBuilder, private _router: Router, private _userServices: User) {
+  private destroy$ = new Subject<void>();
+  role: any[] = []
+  constructor(private _roleServices: Role, private _snackBar: MatSnackBar, private fb: FormBuilder, private _router: Router, private _userServices: User) {
     this.signInForm = createLoginForm(this.fb)
   }
 
    get f() {
     return this.signInForm.controls;
+  }
+
+  ngOnInit(): void {
+    this._roleServices.getRoles().pipe(takeUntil(this.destroy$)).subscribe(response => {
+      this.role = response
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 
   submit(): void {

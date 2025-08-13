@@ -38,6 +38,18 @@
                     </mat-form-field>
                 </p>
 
+                <p>
+                    <mat-form-field  class="input">
+                        <mat-label>role</mat-label>
+                        <mat-select formControlName="role">
+                            <mat-option  *ngFor="let roles of role" [value]="roles.role">{{roles.name}}</mat-option>
+                            <mat-option *ngIf="role.length === 0" disabled>
+                            No record found
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </p>
+
             </mat-card-content>
             <mat-card-actions>
                 <div class="flexes">

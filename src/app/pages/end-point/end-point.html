@@ -7,6 +7,7 @@
 
       <div class="drawer-content">
         <button 
+          *ngIf="currentUserRole === 0"
           routerLink="/dashboard" 
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"  mat-button class="drawer-item">
@@ -14,68 +15,126 @@
           <span *ngIf="isDrawerOpen">Dashboard</span>
         </button>
         <button 
+         *ngIf="currentUserRole === 0"
           routerLink="/employee" 
           routerLinkActive="active"
            mat-button class="drawer-item">
           <mat-icon>person</mat-icon>
           <span *ngIf="isDrawerOpen">Employee</span>
         </button>
-        <button  routerLink="/task" 
+        <button  
+         *ngIf="currentUserRole === 0"
+        routerLink="/task" 
           routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Task</span>
         </button>
-         <button routerLink="/project" 
+         <button 
+          *ngIf="currentUserRole === 0"
+         routerLink="/project" 
           routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Project</span>
         </button>
-         <button routerLink="/client" 
+         <button 
+          *ngIf="currentUserRole === 0"
+         routerLink="/client" 
           routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Client</span>
-      </button>
+        </button>
 
-        <button mat-button class="drawer-item">
+        <button 
+         *ngIf="currentUserRole === 0"
+        mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Engagement Report</span>
         </button>
 
-        <button  routerLink="/employee-allocation" 
+        <button  
+         *ngIf="currentUserRole === 0"
+        routerLink="/employee-allocation" 
           routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Employee Allocation</span>
         </button>
 
-      
-        <button routerLink="/employee-assignment" 
+        
+
+        <button 
+         *ngIf="currentUserRole === 0"
+        routerLink="/employee-assignment" 
           routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Employee Assignment</span>
         </button>
 
-        <button routerLink="/task-assignment" 
+        <button 
+         *ngIf="currentUserRole === 0"
+        routerLink="/task-assignment" 
           routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Task Assignment</span>
         </button>
 
-        <button mat-button class="drawer-item">
+        <button 
+         *ngIf="currentUserRole === 0"
+        mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Role</span>
         </button>
 
-        <button routerLink="/user-logs" 
+        <button 
+         *ngIf="currentUserRole === 0"
+        routerLink="/user-logs" 
           routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Logs</span>
         </button>
 
-        <button routerLink="/end-point" 
+        <button 
+         *ngIf="currentUserRole === 0"
+        routerLink="/end-point" 
           routerLinkActive="active" mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">End Points</span>
         </button>
+
+         <button 
+         *ngIf="currentUserRole === 0"
+         mat-button class="drawer-item">
+          <mat-icon>settings</mat-icon>
+          <span *ngIf="isDrawerOpen">Permission</span>
+        </button>
+
+        <button 
+         *ngIf="currentUserRole === 1"
+        mat-button class="drawer-item">
+          <mat-icon>settings</mat-icon>
+          <span *ngIf="isDrawerOpen">Engagement</span>
+        </button>
+
+         <button 
+         *ngIf="currentUserRole === 1"
+         mat-button class="drawer-item">
+          <mat-icon>settings</mat-icon>
+          <span *ngIf="isDrawerOpen">Engagement Apporval</span>
+        </button>
+
+        <button 
+         *ngIf="currentUserRole === 1"
+         mat-button class="drawer-item">
+          <mat-icon>settings</mat-icon>
+          <span *ngIf="isDrawerOpen">Sub Task</span>
+        </button>
+
+        <button 
+         *ngIf="currentUserRole === 2"
+         mat-button class="drawer-item">
+          <mat-icon>settings</mat-icon>
+          <span *ngIf="isDrawerOpen">Ticket</span>
+        </button>
+
       </div>
 
       <div class="drawer-footer">
@@ -89,7 +148,7 @@
       <button mat-icon-button (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <h2>Application Header</h2>
+      <h2>{{ name }}</h2>
            
         <span class="spacer"></span>
         <button mat-icon-button [matMenuTriggerFor]="drawerMenu">

@@ -1,6 +1,6 @@
  <div class="card-grid">
        
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           
           <mat-card-header>
             <mat-card-title>No of Employees</mat-card-title>
@@ -8,147 +8,187 @@
           
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>Employees</button>
+            <button class="btn-color" mat-button>Employees</button>
           </mat-card-actions>
         </mat-card>
         
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>Active Employees</mat-card-title>
             <mat-card-subtitle>{{ activeCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>Active</button>
+            <button class="btn-color" mat-button>Active</button>
           </mat-card-actions>
         </mat-card>
         
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>In Active Employees</mat-card-title>
             <mat-card-subtitle>{{ inActiveCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>InActive</button>
+            <button class="btn-color" mat-button>InActive</button>
           </mat-card-actions>
         </mat-card>
         
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of Task</mat-card-title>
             <mat-card-subtitle>{{ taskCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>task</button>
+            <button class="btn-color" mat-button>Task</button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of Project</mat-card-title>
             <mat-card-subtitle>{{ projectCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>project</button>
+            <button class="btn-color" mat-button>Project</button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of Active Project</mat-card-title>
             <mat-card-subtitle>{{ projectActiveCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>project</button>
+            <button class="btn-color" mat-button>Active Project</button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of InActive Project</mat-card-title>
             <mat-card-subtitle>{{ projectInActiveCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>project</button>
+            <button class="btn-color" mat-button>In Active Project</button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of Completed Project</mat-card-title>
             <mat-card-subtitle>{{ projectCompletedCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>project</button>
+            <button class="btn-color" mat-button>Completed project</button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of Pending Project</mat-card-title>
             <mat-card-subtitle>{{ projectPendingCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>project</button>
+            <button class="btn-color" mat-button>Pending Project</button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of Rejected Project</mat-card-title>
             <mat-card-subtitle>{{ projectRejectedCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>project</button>
+            <button class="btn-color" mat-button>Rejected Project</button>
           </mat-card-actions>
         </mat-card>
 
-         <mat-card appearance="outlined">
+         <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of Client</mat-card-title>
             <mat-card-subtitle>{{ clientCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>client</button>
+            <button class="btn-color" mat-button>client</button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of Existing Client</mat-card-title>
             <mat-card-subtitle>{{ clientExistCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>client</button>
+            <button class="btn-color" mat-button>Exist client</button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of Non Existing Client</mat-card-title>
             <mat-card-subtitle>{{ clientNonExistCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>client</button>
+            <button class="btn-color" mat-button>Non Exist client</button>
           </mat-card-actions>
         </mat-card>
 
-         <mat-card appearance="outlined">
+         <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of Assign Employee</mat-card-title>
             <mat-card-subtitle>{{ assignEmployeeCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>client</button>
+            <button class="btn-color" mat-button>Assign Client</button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 0">
           <mat-card-header>
             <mat-card-title>No Of UnAssign Employee</mat-card-title>
             <mat-card-subtitle>{{ UnAssignEmployeeCount }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
-            <button mat-button>client</button>
+            <button class="btn-color" mat-button>Un Assign client</button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 1">
+          <mat-card-header>
+            <mat-card-title>No Of Engagement</mat-card-title>
+            <mat-card-subtitle>0</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-actions>
+            <button class="btn-color" mat-button>Engagement</button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 1">
+          <mat-card-header>
+            <mat-card-title>No Of Engagement Approval</mat-card-title>
+            <mat-card-subtitle>0</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-actions>
+            <button class="btn-color" mat-button>Engagement Approval</button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="card-color" *ngIf="currentUserRole === 1">
+          <mat-card-header>
+            <mat-card-title>No Of Sub Task</mat-card-title>
+            <mat-card-subtitle>0</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-actions>
+            <button class="btn-color" mat-button>Sub Task</button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="card-color card-width" *ngIf="currentUserRole === 2">
+          <mat-card-header>
+            <mat-card-title>No Of Ticket</mat-card-title>
+            <mat-card-subtitle>0</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-actions>
+            <button class="btn-color" mat-button>Ticket</button>
           </mat-card-actions>
         </mat-card>
         </div>

@@ -31,17 +31,17 @@
             <!-- Name Column -->
             <ng-container matColumnDef="user_id">
                 <th mat-header-cell *matHeaderCellDef> User Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.user_id.name}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.user_id?.name || '----------'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="project_id">
                 <th mat-header-cell *matHeaderCellDef> Project Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.project_id.project_name}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.project_id?.project_name || '----------'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="task_id">
                 <th mat-header-cell *matHeaderCellDef> Task Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.task_id.name}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.task_id?.name || '----------'}} </td>
             </ng-container>
 
             <!-- Weight Column -->

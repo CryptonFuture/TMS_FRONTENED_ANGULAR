@@ -34,7 +34,7 @@ export interface PeriodicElement {
 })
 export class InactiveEmployee implements AfterViewInit, OnInit, OnDestroy {
 
-  displayedColumns: string[] = ['serialNo', 'name', 'email', 'phone', 'status', 'active', 'admin', 'deleted', 'action'];
+  displayedColumns: string[] = ['serialNo', 'name', 'role', 'status', 'active', 'admin', 'deleted', 'action'];
   InActiveEmp: any = new MatTableDataSource([]);
   InActiveCount: any
   searchInputControl: UntypedFormControl = new UntypedFormControl()
