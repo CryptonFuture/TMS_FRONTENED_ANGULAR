@@ -5,15 +5,32 @@
           
       </div>
 
-      <div class="drawer-content">
-        <button 
-          *ngIf="currentUserRole === 0"
+      <div class="drawer-content" >
+        <!-- <button 
+          *ngIf="route.role === currentUserRole && route.route === '/dashboard'"
           routerLink="/dashboard" 
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"  mat-button class="drawer-item">
           <mat-icon>home</mat-icon>
+          <span *ngIf="isDrawerOpen">{{route.name}}</span>
+        </button>
+
+        <button *ngIf="route.role === currentUserRole && route.route !== '/dashboard'" [routerLink]="route.route" mat-button
+          class="drawer-item">
+          <mat-icon>home</mat-icon>
+          <span *ngIf="isDrawerOpen">{{ route.name }}</span>
+        </button> -->
+
+         <button 
+         *ngIf="currentUserRole === 0"
+          routerLink="/dashboard" 
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }" 
+           mat-button class="drawer-item">
+          <mat-icon>home</mat-icon>
           <span *ngIf="isDrawerOpen">Dashboard</span>
         </button>
+
         <button 
          *ngIf="currentUserRole === 0"
           routerLink="/employee" 
@@ -59,8 +76,6 @@
           <span *ngIf="isDrawerOpen">Employee Allocation</span>
         </button>
 
-        
-
         <button 
          *ngIf="currentUserRole === 0"
         routerLink="/employee-assignment" 
@@ -79,6 +94,8 @@
 
         <button 
          *ngIf="currentUserRole === 0"
+           routerLink="/role" 
+          routerLinkActive="active"
         mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Role</span>
@@ -102,6 +119,8 @@
 
          <button 
          *ngIf="currentUserRole === 0"
+         routerLink="/permission" 
+          routerLinkActive="active"
          mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Permission</span>

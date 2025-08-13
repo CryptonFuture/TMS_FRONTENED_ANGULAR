@@ -15,6 +15,8 @@ import { EmployeeAssignment } from './pages/employee-assignment/employee-assignm
 import { TaskAssignment } from './pages/task-assignment/task-assignment';
 import { UserLogs } from './pages/user-logs/user-logs';
 import { EndPoint } from './pages/end-point/end-point';
+import { Permission } from './pages/permission/permission';
+import { Role } from './pages/role/role';
 
 export const routes: Routes = [
     {
@@ -181,6 +183,36 @@ export const routes: Routes = [
                 path: 'end-point',
                 loadChildren: () =>
                     import('./pages/end-point/end.point.routes').then((m) => m.endPointRoutes)
+            },
+
+        ]
+    },
+
+    // PERMISSION
+
+    {
+        path: '',
+        component: Permission,
+        children: [
+            {
+                path: 'permission',
+                loadChildren: () =>
+                    import('./pages/permission/permission.routes').then((m) => m.permissionRoutes)
+            },
+
+        ]
+    },
+
+    // ROLE
+
+    {
+        path: '',
+        component: Role,
+        children: [
+            {
+                path: 'role',
+                loadChildren: () =>
+                    import('./pages/role/role.routes').then((m) => m.roleRoutes)
             },
 
         ]

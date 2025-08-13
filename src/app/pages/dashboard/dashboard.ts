@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Footer } from '../../components/footer/footer';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +12,8 @@ import { Router, RouterModule } from '@angular/router'
 import { User } from '../../services/auth/user';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Logout } from '../../components/logout/logout';
+import { Route } from '../../services/route/route';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,11 +23,14 @@ import { Logout } from '../../components/logout/logout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 
 })
-export class Dashboard implements OnInit {
+export class Dashboard implements OnInit, OnDestroy {
   isDrawerOpen = true;
   name: any
   currentUserRole: any = 0
-  constructor(private _snackBar: MatSnackBar, private _router: Router, private _userServices: User) {}
+  routes: any[] = []
+  private destroy$ = new Subject<void>();
+  
+  constructor(private cdr: ChangeDetectorRef, private _route: Route, private _snackBar: MatSnackBar, private _router: Router, private _userServices: User) {}
 
   ngOnInit(): void {
     const username = localStorage.getItem('name')
@@ -34,6 +39,22 @@ export class Dashboard implements OnInit {
     const role = JSON.parse(localStorage.getItem('role') || '{}')
     this.currentUserRole = role
 
+    this.getRoutes()
+
+  }
+
+  getRoutes(): void {
+    this._route.getRoute().pipe(takeUntil(this.destroy$)).subscribe(response => {
+      this.routes = response
+      console.log(this.routes, 'routes');
+      
+      this.cdr.detectChanges()
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 
 
