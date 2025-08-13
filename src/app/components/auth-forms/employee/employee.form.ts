@@ -17,7 +17,8 @@ export function createEmployeeForm(fb: FormBuilder): FormGroup {
         designName: ['', [Validators.required]],
         department: ['', [Validators.required]],
         joiningDate: ['', [Validators.required]],
-        description: ['']
+        description: [''],
+        role: ['']
     } , { validators: passwordMatchValidator })
 }
 
@@ -32,6 +33,7 @@ export function updateEmployeeForm(fb: FormBuilder): FormGroup {
         joiningDate: [{value: false, disabled: true}],
         description: [''],
         active: [false],
-        is_admin: [false]
+        is_admin: [false],
+        role: ['']
     }, { validators: passwordMatchValidator })
 }

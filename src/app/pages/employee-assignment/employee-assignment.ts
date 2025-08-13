@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Footer } from '../../components/footer/footer';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,6 +17,15 @@ import { EmpAssignList } from '../../components/emp-assign-list/emp-assign-list'
   templateUrl: './employee-assignment.html',
   styleUrl: './employee-assignment.scss'
 })
-export class EmployeeAssignment {
+export class EmployeeAssignment implements OnInit {
   isDrawerOpen = true;
+  name: any
+ currentUserRole: any = 0
+  ngOnInit(): void {
+    const username = localStorage.getItem('name')
+    this.name = username    
+
+      const role = JSON.parse(localStorage.getItem('role') || '{}')
+    this.currentUserRole = role
+  }
 }

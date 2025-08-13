@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Footer } from '../../components/footer/footer';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,6 +17,17 @@ import { UserLogsList } from '../../components/user-logs-list/user-logs-list';
   templateUrl: './user-logs.html',
   styleUrl: './user-logs.scss'
 })
-export class UserLogs {
+export class UserLogs implements OnInit {
   isDrawerOpen = true;
+
+   name: any
+  currentUserRole: any = 0
+
+   ngOnInit(): void {
+    const username = localStorage.getItem('name')
+    this.name = username
+    
+    const role = JSON.parse(localStorage.getItem('role') || '{}')
+    this.currentUserRole = role
+  }
 }

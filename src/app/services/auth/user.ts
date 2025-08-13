@@ -43,12 +43,28 @@ export class User {
       return localStorage.getItem('email') ?? ''
     }
 
-     set tokenType(tokenType: string) {
+    set tokenType(tokenType: string) {
       localStorage.setItem('tokenType', tokenType)
     }
 
     get tokenType(): string {
       return localStorage.getItem('tokenType') ?? ''
+    }
+
+    set role(role: string) {
+      localStorage.setItem('role', role)
+    }
+
+    get role(): string {
+      return localStorage.getItem('role') ?? ''
+    }
+
+     set name(name: string) {
+      localStorage.setItem('name', name)
+    }
+
+    get name(): string {
+      return localStorage.getItem('name') ?? ''
     }
 
     
@@ -60,6 +76,8 @@ export class User {
           this.id = response.user.id
           this.email = response.user.email
           this.tokenType = response.user.tokenType
+          this.role = response.user.role,
+          this.name = response.user.name
         }),
         catchError(error => {
           return of(error)

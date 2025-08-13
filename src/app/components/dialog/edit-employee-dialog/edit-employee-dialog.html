@@ -1,12 +1,12 @@
- <form class="example-form" [formGroup]="editEmployeeForm">
-<h2 mat-dialog-title class="dialog-title">
-  Edit Post
-  <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
-    <mat-icon>close</mat-icon>
-  </button>
-</h2>
-<mat-dialog-content class="mat-typography">
- 
+<form class="example-form" [formGroup]="editEmployeeForm">
+  <h2 mat-dialog-title class="dialog-title">
+    Edit Post
+    <button mat-icon-button mat-dialog-close class="close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+  <mat-dialog-content class="mat-typography">
+
     <div class="form-grid">
       <mat-form-field>
         <mat-label>Name</mat-label>
@@ -15,7 +15,8 @@
 
       <mat-form-field>
         <mat-label>Email</mat-label>
-        <input [disabled]="true" formControlName="email" type="email" class="input" matInput placeholder="email..." value="">
+        <input [disabled]="true" formControlName="email" type="email" class="input" matInput placeholder="email..."
+          value="">
       </mat-form-field>
 
       <mat-form-field>
@@ -33,7 +34,7 @@
       <mat-form-field>
         <mat-label>Address</mat-label>
         <input formControlName="address" class="input" matInput placeholder="email..." value="">
-         <mat-error *ngIf="editEmployeeForm.get('address')?.hasError('required')">
+        <mat-error *ngIf="editEmployeeForm.get('address')?.hasError('required')">
           Address is required
         </mat-error>
       </mat-form-field>
@@ -46,7 +47,7 @@
             No record found
           </mat-option>
         </mat-select>
- <mat-error *ngIf="editEmployeeForm.get('designName')?.hasError('required')">
+        <mat-error *ngIf="editEmployeeForm.get('designName')?.hasError('required')">
           Designation is required
         </mat-error>
       </mat-form-field>
@@ -59,20 +60,29 @@
             No record found
           </mat-option>
         </mat-select>
- <mat-error *ngIf="editEmployeeForm.get('department')?.hasError('required')">
+        <mat-error *ngIf="editEmployeeForm.get('department')?.hasError('required')">
           Department is required
         </mat-error>
       </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>joining date</mat-label>
+        <input [disabled]="true" matInput [matDatepicker]="datepicker" formControlName="joiningDate">
+        <mat-datepicker #datepicker />
+        <mat-datepicker-toggle [for]="datepicker" matSuffix />
+
+      </mat-form-field>
+
+      <mat-form-field>
+          <mat-label>role</mat-label>
+          <mat-select formControlName="role">
+            <mat-option  *ngFor="let roles of role" [value]="roles.role">{{roles.name}}</mat-option>
+            <mat-option *ngIf="role.length === 0" disabled>
+              No record found
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
     </div>
-
-
-    <mat-form-field>
-      <mat-label>joining date</mat-label>
-      <input [disabled]="true" matInput [matDatepicker]="datepicker" formControlName="joiningDate">
-      <mat-datepicker #datepicker />
-      <mat-datepicker-toggle [for]="datepicker" matSuffix />
-      
-    </mat-form-field>
 
     <mat-form-field class="example-full-width">
       <mat-label>Description</mat-label>
@@ -83,16 +93,16 @@
     <mat-checkbox formControlName="is_admin">Admin</mat-checkbox>
 
 
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button class="color-btn" matButton mat-dialog-close>Cancel</button>
-  <button class="btn" [disabled]="editEmployeeForm.disabled" (click)="onUpdate()" matButton="filled" cdkFocusInitial>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button class="color-btn" matButton mat-dialog-close>Cancel</button>
+    <button class="btn" [disabled]="editEmployeeForm.disabled" (click)="onUpdate()" matButton="filled" cdkFocusInitial>
       @if(!editEmployeeForm.disabled) {
       <span>Update</span>
       }
       @if (editEmployeeForm.disabled) {
       <span>Update</span>
       }
-  </button>
-</mat-dialog-actions>
+    </button>
+  </mat-dialog-actions>
 </form>

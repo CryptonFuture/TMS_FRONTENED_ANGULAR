@@ -16,6 +16,7 @@ import { User } from '../../../services/auth/user';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
+import { Role } from '../../../services/role/role';
 
 @Component({
   selector: 'app-add-employee-dialog',
@@ -28,9 +29,10 @@ export class AddEmployeeDialog {
   employeeForm: FormGroup
   des: any[] = []
   dep: any[] = []
+  role: any[] = []
   private destroy$ = new Subject<void>();
 
-  constructor(private dialogRef: MatDialogRef<AddEmployeeDialog>, private _snackBar: MatSnackBar, private _userService: User, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder) {
+  constructor(private _roleService: Role, private dialogRef: MatDialogRef<AddEmployeeDialog>, private _snackBar: MatSnackBar, private _userService: User, private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empService: Employee, private fb: FormBuilder) {
     this.employeeForm = createEmployeeForm(this.fb)
   }
 
@@ -40,6 +42,7 @@ export class AddEmployeeDialog {
 
    ngOnInit(): void {
       this.getDesDep()
+      this.getRoles()
     }
   
     getDesDep(): void {
@@ -47,6 +50,16 @@ export class AddEmployeeDialog {
         this.des = response.designation
         this.dep = response.department  
          this.cdr.detectChanges()   
+      })
+    }
+
+    getRoles(): void {
+      this._roleService.getRoles().pipe(takeUntil(this.destroy$)).subscribe(response => {
+        this.role = response
+        
+        console.log(this.role, 'role');
+        
+        this.cdr.detectChanges()
       })
     }
   

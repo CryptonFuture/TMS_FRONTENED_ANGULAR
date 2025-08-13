@@ -92,7 +92,7 @@
 
       </mat-form-field>
 
-      <mat-form-field>
+    <mat-form-field>
         <mat-label>department</mat-label>
         <mat-select formControlName="department">
           <mat-option *ngFor="let depart of dep" [value]="depart.name">{{depart.name}}</mat-option>
@@ -104,7 +104,6 @@
           Department is required
         </mat-error>
       </mat-form-field>
-    </div>
 
     <mat-form-field>
       <mat-label>joining date</mat-label>
@@ -115,6 +114,17 @@
         JoiningDate is required
       </mat-error>
     </mat-form-field>
+
+    <mat-form-field>
+          <mat-label>role</mat-label>
+          <mat-select formControlName="role">
+            <mat-option  *ngFor="let roles of role" [value]="roles.role">{{roles.name}}</mat-option>
+            <mat-option *ngIf="role.length === 0" disabled>
+              No record found
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+    </div>
 
     <mat-form-field class="example-full-width">
       <mat-label>Description</mat-label>

@@ -7,6 +7,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+ 
 }
 
 .main-header, .main-footer {
@@ -22,12 +23,14 @@
   flex: 1;
   padding: 24px;
   background: #f5f5f5;
-  overflow: auto;
+  overflow: auto; 
 }
 
 .example-sidenav {
   width: 250px !important;
   transition: width 0.3s ease;
+  background-color: white !important;
+
 }
 
 .mat-drawer:not(.mat-drawer-opened) {
@@ -46,6 +49,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+
 }
 
 .drawer-content {
@@ -54,6 +58,7 @@
   flex-direction: column;
   gap: 8px;
   padding: 16px;
+
 }
 
 .drawer-item {
@@ -62,6 +67,8 @@
   gap: 10px;
   justify-content: flex-start;
   width: 100%;
+  color: #3f51b5 !important;
+
 }
 
 .spacer {
@@ -76,6 +83,7 @@
 }
 
 .drawer-item.active {
-  background-color: #e0e0e0;
+  background-color: #3f51b5;
+  color: white !important;
   font-weight: bold;
 }

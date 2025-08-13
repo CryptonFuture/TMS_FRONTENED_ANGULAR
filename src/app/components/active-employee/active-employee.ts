@@ -19,6 +19,7 @@ import { ViewEmployeeDialog } from '../dialog/view/view-employee-dialog/view-emp
 import { FormControl, UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AssignEmpToClient } from '../dialog/assign-emp-to-client/assign-emp-to-client';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import { CommonModule } from '@angular/common';
 
 export interface PeriodicElement {
   name: string;
@@ -30,15 +31,14 @@ export interface PeriodicElement {
 
 @Component({
   selector: 'app-active-employee',
-  imports: [ MatMenuModule, FormsModule, MatSortModule, ReactiveFormsModule, RouterModule, MatDialogModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
+  imports: [ MatMenuModule, CommonModule, FormsModule, MatSortModule, ReactiveFormsModule, RouterModule, MatDialogModule, MatChipsModule, MatIconModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTableModule],
   templateUrl: './active-employee.html',
   styleUrl: './active-employee.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActiveEmployee implements AfterViewInit, OnDestroy, OnInit {
 
-
-  displayedColumns: string[] = ['serialNo', 'name', 'email', 'phone', 'address', 'status', 'admin', 'action'];
+  displayedColumns: string[] = ['serialNo', 'name', 'email', 'phone', 'address', 'role', 'status', 'admin', 'action'];
   activeEmp = new MatTableDataSource([]);
   activeCount: any
   searchQuery: any = ""

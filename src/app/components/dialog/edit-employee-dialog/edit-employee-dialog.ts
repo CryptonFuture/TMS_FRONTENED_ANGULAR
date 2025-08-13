@@ -16,6 +16,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { DesDep } from '../../../services/desDep/des-dep';
 import { CommonModule } from '@angular/common'
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Role } from '../../../services/role/role';
 
 @Component({
   selector: 'app-edit-employee-dialog',
@@ -29,7 +30,9 @@ export class EditEmployeeDialog implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   des: any[] = []
   dep: any[] = []
-  constructor(private dialogRef: MatDialogRef<EditEmployeeDialog>, private _snackbar: MatSnackBar,private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empServices: Employee, private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: {data: any}) {
+  role: any[] = []
+
+  constructor(private _roleService: Role, private dialogRef: MatDialogRef<EditEmployeeDialog>, private _snackbar: MatSnackBar,private cdr: ChangeDetectorRef, private _desDep: DesDep, private _empServices: Employee, private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: {data: any}) {
     this.editEmployeeForm = updateEmployeeForm(this.fb)
   }
 
@@ -47,12 +50,14 @@ export class EditEmployeeDialog implements OnInit, OnDestroy {
         designName: response.data.designName,
         department: response.data.department,
         active: response.data.active,
-        is_admin: response.data.is_admin
+        is_admin: response.data.is_admin,
+        role: response.data.role
       })
 
     })
 
     this.getDesDep()
+    this.getRoles()
   }
 
   getDesDep(): void {
@@ -63,6 +68,16 @@ export class EditEmployeeDialog implements OnInit, OnDestroy {
        this.cdr.detectChanges()   
     })
   }
+
+  getRoles(): void {
+      this._roleService.getRoles().pipe(takeUntil(this.destroy$)).subscribe(response => {
+        this.role = response
+        
+        console.log(this.role, 'role');
+        
+        this.cdr.detectChanges()
+      })
+    }
 
   ngOnDestroy(): void {
     this.destroy$.next()

@@ -7,10 +7,11 @@ import { Task } from '../../services/task/task';
 import { Project } from '../../services/project/project';
 import { Client } from '../../services/client/client';
 import { EmpAlloc } from '../../services/emp-alloc/emp-alloc';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-content',
-  imports: [MatCardModule, MatButtonModule],
+  imports: [MatCardModule, CommonModule, MatButtonModule],
   templateUrl: './content.html',
   styleUrl: './content.scss'
 })
@@ -30,12 +31,17 @@ export class Content implements OnDestroy, OnInit {
   clientNonExistCount: any
   assignEmployeeCount: any
   UnAssignEmployeeCount: any
+  currentUserRole: any = 0
+
   private destroy$ = new Subject<void>();
 
   constructor(private _empAllocService: EmpAlloc, private _clientService: Client, private _projService: Project, private _taskService: Task, private cdr: ChangeDetectorRef, private _empServices: Employee) {}
 
   ngOnInit(): void {
     this.count()
+
+    const role = JSON.parse(localStorage.getItem('role') || '{}')
+    this.currentUserRole = role
   }
 
   count(): void {
