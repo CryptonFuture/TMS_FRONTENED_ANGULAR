@@ -79,6 +79,8 @@
 
         <button 
          *ngIf="currentUserRole === 0"
+           routerLink="/role" 
+          routerLinkActive="active"
         mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Role</span>
@@ -102,6 +104,8 @@
 
          <button 
          *ngIf="currentUserRole === 0"
+         routerLink="/permission" 
+          routerLinkActive="active"
          mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
           <span *ngIf="isDrawerOpen">Permission</span>

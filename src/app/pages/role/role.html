@@ -5,15 +5,32 @@
           
       </div>
 
-     <div class="drawer-content">
-        <button 
-          *ngIf="currentUserRole === 0"
+      <div class="drawer-content" >
+        <!-- <button 
+          *ngIf="route.role === currentUserRole && route.route === '/dashboard'"
           routerLink="/dashboard" 
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"  mat-button class="drawer-item">
           <mat-icon>home</mat-icon>
+          <span *ngIf="isDrawerOpen">{{route.name}}</span>
+        </button>
+
+        <button *ngIf="route.role === currentUserRole && route.route !== '/dashboard'" [routerLink]="route.route" mat-button
+          class="drawer-item">
+          <mat-icon>home</mat-icon>
+          <span *ngIf="isDrawerOpen">{{ route.name }}</span>
+        </button> -->
+
+         <button 
+         *ngIf="currentUserRole === 0"
+          routerLink="/dashboard" 
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }" 
+           mat-button class="drawer-item">
+          <mat-icon>home</mat-icon>
           <span *ngIf="isDrawerOpen">Dashboard</span>
         </button>
+
         <button 
          *ngIf="currentUserRole === 0"
           routerLink="/employee" 
@@ -59,8 +76,6 @@
           <span *ngIf="isDrawerOpen">Employee Allocation</span>
         </button>
 
-        
-
         <button 
          *ngIf="currentUserRole === 0"
         routerLink="/employee-assignment" 
@@ -79,7 +94,7 @@
 
         <button 
          *ngIf="currentUserRole === 0"
-           routerLink="/role" 
+          routerLink="/role" 
           routerLinkActive="active"
         mat-button class="drawer-item">
           <mat-icon>settings</mat-icon>
@@ -142,7 +157,7 @@
       </div>
 
       <div class="drawer-footer">
-     
+       
       </div>
     </div>
   </mat-drawer>
@@ -168,14 +183,14 @@
                 <mat-icon>settings</mat-icon>
                 <span>Settings</span>
             </button>
-          <app-logout></app-logout>
+            <app-logout></app-logout>
         </mat-menu>
     </header>
 
     
     <main class="main-content">
-     <h2>Task Assignment</h2>
-     <app-task-assign-list></app-task-assign-list>
+        <h2>Role</h2>
+        <app-role-list></app-role-list>
     </main>
 
     <app-footer></app-footer>
