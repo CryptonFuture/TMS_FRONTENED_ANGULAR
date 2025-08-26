@@ -18,7 +18,7 @@ export class Task {
 
   constructor(private _httpclient: HttpClient) {}
 
-  getTask(search: any = "", page: any = 1, limit: any = 10, sort: any = 'name:asc', status: any = "", date: any = "",): Observable<any> {
+  getTask(search: any = "", page: any = 1, limit: any = 10, sort: any = 'name:asc', status: any = "", date: any = ""): Observable<any> {
        let params = new HttpParams()
 
       if(search) {

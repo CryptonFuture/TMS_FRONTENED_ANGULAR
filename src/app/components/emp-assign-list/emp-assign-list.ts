@@ -39,6 +39,10 @@ export class EmpAssignList implements OnInit, OnDestroy, AfterViewInit {
   ];
   empAssign: any = new MatTableDataSource([]);
   empAssignCount: any
+  searchInputControl: UntypedFormControl = new UntypedFormControl()
+  searchQuery: any = ""
+  page: number = 1;
+  limit: number = 10;
 
   private destroy$ = new Subject<void>();
 
@@ -52,12 +56,32 @@ export class EmpAssignList implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.getEmpAssign()
+    this.onSearch()
   }
+
+    onSearch(): void {
+      this.searchInputControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        map(value => value?.trim().toLowerCase())
+      ).subscribe(value => {
+        this.searchQuery = value
+        this.getEmpAssign()
+        this.cdr.detectChanges()
+       })
+    }
+
+    onPageChange(event: PageEvent): void {
+      this.page = event.pageIndex + 1;
+      this.limit = event.pageSize;
+      this.getEmpAssign();
+    }
 
   getEmpAssign(): void {
     forkJoin([
-      this._empAssignService.getEmpAssign().pipe(retry(3), catchError(err => of(null))),
-      this._empAssignService.countEmpAssign().pipe(retry(3), catchError(err => of(null)))
+      this._empAssignService.getEmpAssign(this.searchQuery, this.page, this.limit).pipe(retry(3), catchError(err => of(null))),
+      this._empAssignService.countEmpAssign(this.searchQuery).pipe(retry(3), catchError(err => of(null)))
 
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
       empAssignment,
