@@ -39,6 +39,10 @@ export class TaskAssignList implements OnInit, OnDestroy, AfterViewInit {
   ];
   taskAssign: any = new MatTableDataSource([]);
   taskAssignCount: any
+  searchInputControl: UntypedFormControl = new UntypedFormControl()
+  searchQuery: any = ""
+  page: number = 1;
+  limit: number = 10;
 
   private destroy$ = new Subject<void>();
 
@@ -53,12 +57,33 @@ export class TaskAssignList implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.getTaskAssign()
+    this.onSearch()
   }
+
+   onSearch(): void {
+      this.searchInputControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        map(value => value?.trim().toLowerCase())
+      ).subscribe(value => {
+        this.searchQuery = value
+        this.getTaskAssign()
+        this.cdr.detectChanges()
+       })
+    }
+
+    onPageChange(event: PageEvent): void {
+      this.page = event.pageIndex + 1;
+      this.limit = event.pageSize;
+      this.getTaskAssign();
+    }
+
 
     getTaskAssign(): void {
     forkJoin([
-      this._taskAssignService.getTaskAssign().pipe(retry(3), catchError(err => of(null))),
-      this._taskAssignService.countTaskAssign().pipe(retry(3), catchError(err => of(null)))
+      this._taskAssignService.getTaskAssign(this.searchQuery, this.page, this.limit).pipe(retry(3), catchError(err => of(null))),
+      this._taskAssignService.countTaskAssign(this.searchQuery).pipe(retry(3), catchError(err => of(null)))
 
     ]).pipe(takeUntil(this.destroy$)).subscribe(([
       taskAssignment,

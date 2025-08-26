@@ -17,8 +17,18 @@ export class EmpAssign {
 
   constructor(private _httpclient: HttpClient) { }
 
-  getEmpAssign(): Observable<any> {
-    return this._httpclient.get(`${environment.baseUrl}/api/v1/getEmpAssign`).pipe(
+  getEmpAssign(search: any = "", page: any = 1, limit: any = 10): Observable<any> {
+    let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+       params = params
+        .set('page', page.toString())
+        .set('limit', limit.toString())
+
+    return this._httpclient.get(`${environment.baseUrl}/api/v1/getEmpAssign`, {params}).pipe(
       switchMap(response => {
         const EmpAssign = (response as any).data ?? []
         return of(EmpAssign)
@@ -105,7 +115,13 @@ export class EmpAssign {
     )
   }
 
-  countEmpAssign(): Observable<any> {
-    return this._httpclient.get(`${environment.baseUrl}/api/v1/empAssignCount`)
+  countEmpAssign(search: string = ""): Observable<any> {
+    let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+    return this._httpclient.get(`${environment.baseUrl}/api/v1/empAssignCount`, {params})
   }
 }

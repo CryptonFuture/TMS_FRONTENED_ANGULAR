@@ -17,8 +17,18 @@ export class TaskAssign {
 
   constructor(private _httpclient: HttpClient) { }
 
-  getTaskAssign(): Observable<any> {
-    return this._httpclient.get(`${environment.baseUrl}/api/v1/getTaskAssign`).pipe(
+  getTaskAssign(search: any = "", page: any = 1, limit: any = 10): Observable<any> {
+     let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+       params = params
+        .set('page', page.toString())
+        .set('limit', limit.toString())
+
+    return this._httpclient.get(`${environment.baseUrl}/api/v1/getTaskAssign`, {params}).pipe(
       switchMap(response => {
         const TaskAssign = (response as any).data ?? []
         return of(TaskAssign)
@@ -105,7 +115,13 @@ export class TaskAssign {
     )
   }
 
-  countTaskAssign(): Observable<any> {
-    return this._httpclient.get(`${environment.baseUrl}/api/v1/taskAssignCount`)
+  countTaskAssign(search: string = ""): Observable<any> {
+    let params = new HttpParams()
+
+      if(search) {
+        params = params.set('search', search)
+      }
+
+    return this._httpclient.get(`${environment.baseUrl}/api/v1/taskAssignCount` , {params})
   }
 }
